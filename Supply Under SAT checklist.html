@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contracting Officer Checklist</title>
+  <style>
+    :root {
+      --bg-color: #f4f4f4;
+      --text-color: #222;
+      --card-bg: #fff;
+      --accent-color: #007bff;
+      --progress-bg: #e0e0e0;
+      --border-color: #ddd;
+    }
+    body.dark-mode {
+      --bg-color: #121212;
+      --text-color: #f5f5f5;
+      --card-bg: #1e1e1e;
+      --accent-color: #0dcaf0;
+      --progress-bg: #333;
+      --border-color: #444;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+    .screen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    h1 { font-size: 1.6rem; margin: 0; }
+    .date-stamp { font-size: 0.95rem; }
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      background-color: var(--accent-color);
+      color: white;
+      cursor: pointer;
+      margin: 5px 10px 15px 0;
+    }
+    button:hover { opacity: 0.9; }
+    .progress-container {
+      background: var(--progress-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      height: 20px;
+      margin-bottom: 20px;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: var(--accent-color);
+      width: 0%;
+      text-align: center;
+      color: white;
+      font-size: 0.75rem;
+      transition: width 0.3s ease;
+    }
+    .content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (min-width: 900px) {
+      .content { grid-template-columns: 1fr 1fr; }
+    }
+    details, .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      padding: 10px 15px;
+    }
+    details { margin: 10px 0; }
+    summary {
+      font-weight: bold;
+      font-size: 1.1em;
+      cursor: pointer;
+    }
+    .check-line { margin: 8px 0; }
+    label { cursor: pointer; }
+    .check-line a {
+      color: var(--accent-color);
+      font-size: 0.9em;
+      margin-left: 10px;
+      text-decoration: none;
+    }
+    .check-line a:hover { text-decoration: underline; }
+    .card h3 { margin: 0 0 8px 0; font-size: 1.1rem; }
+    .print-header {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      padding: 10px 20px;
+      border-bottom: 1px solid #000;
+      background: white;
+      text-align: center;
+      font-size: 0.95rem;
+      z-index: 9999;
+    }
+    .print-header h2 { margin: 0; font-size: 1.1rem; }
+    @media print {
+      .screen-header, button, .progress-container { display: none; }
+      .print-header { display: block; }
+      body { margin-top: 80px; background: white; color: black; }
+      details, .card { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="screen-header">
+  <h1>Contracting Officer Checklist – Supply Below the SAT</h1>
+  <div class="date-stamp" id="date-stamp"></div>
+</header>
+
+<div class="print-header">
+  <h2>Contracting Officer Checklist – Supply Below the SAT</h2>
+  <div class="date-stamp" id="print-date-stamp"></div>
+</div>
+
+<div>
+  <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  <button onclick="window.print()">🖨️ Print to PDF</button>
+  <button onclick="resetChecklist()">🔁 Reset Checklist</button>
+</div>
+
+<div class="progress-container">
+  <div class="progress-bar" id="progress-bar">0%</div>
+</div>
+
+<div class="content" id="checklist-area">
+  <div id="checklist"></div>
+  <aside id="verification" class="card">
+    <h3>Contracting Officer verification</h3>
+    <div id="verification-list"></div>
+  </aside>
+</div>
+
+<script>
+  const today = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById("date-stamp").textContent = today.toLocaleDateString(undefined, options);
+  document.getElementById("print-date-stamp").textContent = today.toLocaleDateString(undefined, options);
+
+  const checklistData = [
+    { title: "Pre-Requirements Package Initiation Documents", items: ["DARB approval", "COTS contract approval", "Email distro (optional)"] },
+    { title: "Justification and Approval", items: ["Brand Name Justification", "Limited Source Justification"] },
+    { title: "Market Research Documentation", items: ["NAICS code", "PSC code", "SBA Standard", "GSA availability"] },
+    { title: "Purchase Description", items: ["Salient Characteristics"] },
+    { title: "Purchase Request, Funding Document", items: ["PR form if available"] },
+    { title: "Peer Review/SRB", items: ["Peer Review MICC Form"] },
+    { title: "Determination and Findings", items: ["Buy American Act"] },
+    { title: "Solicitation Documents", items: [
+      "RFQ, CSS, RFP", "Salient Characteristics", "Clauses and Provisions",
+      "3.1 As prescribed in DFARS 252.204-7004", "3.2 WAWF", "3.3 52.212-4 by Reference",
+      "3.4 52.212-1", "3.5 52.212-2", "3.6 52.212-3"
+    ]},
+    { title: "Industry Documents", items: ["Offeror Initial", "Offeror Successful"] },
+    { title: "Evaluations", items: ["FAPIIS"] },
+    { title: "Technical Evaluation", items: ["NDA RA signed", "Technical Evaluation Form RA signed", "Email distro"] },
+    { title: "Determination of Contractual Responsibility", items: ["DoR from SAM KO will sign"] },
+    { title: "Determination of Fair and Reasonable Price", items: ["SAPAAM signed by KO and KS"] },
+    { title: "System for Award Management", items: [
+      "First SAM check of all offerors", "Second SAM check", "2.1 No Exclusions",
+      "2.2 Reps and Certs", "2.3 FAR and DFAR report"
+    ]},
+    { title: "Peer Review/CRB", items: ["CRB signed by KO and KS"] },
+    { title: "Notice of Award", items: ["Award notification to KTR", "Award notification to Gov"] },
+    { title: "Contract / Letter Contract", items: ["KO signed", "KTR signed", "Bilaterally signed"] },
+    { title: "Contract Action Report", items: ["CAR draft", "CAR final"] },
+    { title: "Closeout", items: [
+      "Contract Closeout Checklist DD 1597",
+      "Contract Closeout Statement DD 1594",
+      "Contractor Closeout Documentation"
+    ]}
+  ];
+
+  const verificationItems = [
+    "Do we have funded PR?",
+    "IAW FAR 8.002 Priority for Use of mandatory Gov Resource?",
+    "CHESS, GSA, SAM.gov?",
+    "Is it for solicited to Small Business?",
+    "Did we use proper NAICS and PSC code? SBA table?",
+    "Did we give enough time for vendor to respond?",
+    "Did we conduct proper market research?",
+    "Did we use CSS or Solicitation?",
+    "Did KO check all the details in solicitation?",
+    "Are clauses and provision complete?",
+    "5 w's of delivery POC and location?",
+    "Are we sure we got receive all offers? Junk email?",
+    "Are all offers filed in PCF cabinet?",
+    "Verfiy the price of each offer, double check very important",
+    "Is the contractor awarded registered and current in SAM?",
+    "Is the Tech Eval have been done?",
+    "Is NDA signed by RA?",
+    "Is Tech Eval form signed?",
+    "Verify delivery 5w's in PO",
+    "Is quantify and price accurate?",
+    "Verify all clauses and provision \"WAWF\""
+  ];
+
+  const linkMap = {
+    "NAICS code": "https://www.census.gov/naics/",
+    "PSC code": "https://psctool.us/home",
+    "SBA Standard": "https://www.sba.gov/document/support-table-size-standards",
+    "GSA availability": "https://www.ebuy.gsa.gov/ebuy/"
+  };
+
+  const checklistArea = document.getElementById("checklist-area");
+  const leftContainer = document.getElementById("checklist");
+  const rightList = document.getElementById("verification-list");
+  const progressBar = document.getElementById("progress-bar");
+
+  function renderLeft() {
+    leftContainer.innerHTML = "";
+    checklistData.forEach((section, sIdx) => {
+      const details = document.createElement("details");
+      details.innerHTML = `<summary>${section.title}</summary>`;
+      section.items.forEach((item, iIdx) => {
+        const id = `chk-${sIdx}-${iIdx}`;
+        const isChecked = localStorage.getItem(id) === "true";
+        const line = document.createElement("div");
+        line.className = "check-line";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = id;
+        checkbox.checked = isChecked;
+        checkbox.addEventListener("change", () => {
+          localStorage.setItem(id, checkbox.checked);
+          updateProgress();
+        });
+
+        const label = document.createElement("label");
+        label.htmlFor = id;
+        if (linkMap[item]) {
+          label.innerHTML = `${item} <a href="${linkMap[item]}" target="_blank">[link]</a>`;
+        } else {
+          label.textContent = item;
+        }
+
+        line.appendChild(checkbox);
+        line.appendChild(label);
+        details.appendChild(line);
+      });
+      leftContainer.appendChild(details);
+    });
+  }
+
+  function renderRight() {
+    rightList.innerHTML = "";
+    verificationItems.forEach((text, idx) => {
+      const id = `cov-${idx}`;
+      const isChecked = localStorage.getItem(id) === "true";
+      const line = document.createElement("div");
+      line.className = "check-line";
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.id = id;
+      checkbox.checked = isChecked;
+      checkbox.addEventListener("change", () => {
+        localStorage.setItem(id, checkbox.checked);
+        updateProgress();
+      });
+
+      const label = document.createElement("label");
+      label.htmlFor = id;
+      label.textContent = text;
+
+      line.appendChild(checkbox);
+      line.appendChild(label);
+      rightList.appendChild(line);
+    });
+  }
+
+  function updateProgress() {
+    const inputs = checklistArea.querySelectorAll('input[type="checkbox"]');
+    const total = inputs.length;
+    const checked = Array.from(inputs).filter(i => i.checked).length;
+    const percent = total ? Math.round((checked / total) * 100) : 0;
+    progressBar.style.width = `${percent}%`;
+    progressBar.textContent = `${percent}%`;
+  }
+
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+  }
+
+  function resetChecklist() {
+    if (confirm("Are you sure you want to reset all checkboxes?")) {
+      const inputs = checklistArea.querySelectorAll('input[type="checkbox"]');
+      inputs.forEach(input => {
+        input.checked = false;
+        localStorage.removeItem(input.id);
+      });
+      updateProgress();
+    }
+  }
+
+  renderLeft();
+  renderRight();
+  updateProgress();
+</script>
+
+</body>
+</html>
