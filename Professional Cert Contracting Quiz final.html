@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Professional Certification in Contracting Quiz</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root{
+    --bg1:#0f172a; --bg2:#0ea5e9; --bg3:#8b5cf6;
+    --card:#0b1020; --text:#f8fafc; --muted:#cbd5e1;
+    --right:#22c55e; --wrong:#ef4444; --accent:#f59e0b;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    min-height:100vh; color:var(--text);
+    background: radial-gradient(1200px 500px at 10% 0%, rgba(14,165,233,.25), transparent 60%),
+                radial-gradient(1200px 500px at 90% 0%, rgba(139,92,246,.25), transparent 60%),
+                linear-gradient(135deg, #0f172a 0%, #0b1020 100%);
+  }
+  .app{ width:min(1100px,96vw); margin:24px auto; position:relative; }
+  .title{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+  h1{ margin:0; font-size:clamp(1.4rem,3.5vw,2.2rem); letter-spacing:.3px;}
+  .badge{ background:linear-gradient(90deg, rgba(245,158,11,.25), rgba(139,92,246,.25)); padding:6px 10px; border-radius:999px; color:var(--muted); font-weight:700; }
+
+  /* Fancy progress */
+  .fancy-wrap{ display:flex; align-items:center; gap:10px; margin:8px 0 16px; }
+  .fancy-progress{
+    position:relative; flex:1 1 auto; height:16px; border-radius:999px;
+    background: linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+    overflow:hidden; border:1px solid rgba(255,255,255,.1);
+  }
+  .fancy-progress .bar{
+    position:absolute; inset:0 0 0 0; width:0%;
+    background: linear-gradient(90deg, #22c55e, #06b6d4, #8b5cf6);
+    background-size: 200% 100%;
+    animation: shimmer 2.2s linear infinite;
+  }
+  @keyframes shimmer{ 0%{ background-position: 0% 0; } 100%{ background-position: -200% 0; } }
+  .spark{
+    position:absolute; top:50%; transform: translate(-50%, -50%);
+    width:24px; height:24px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #fff, #f59e0b 60%, transparent 62%);
+    box-shadow: 0 0 12px rgba(245,158,11,.8), 0 0 24px rgba(139,92,246,.5);
+    pointer-events:none;
+  }
+  .progress-label{ min-width:120px; text-align:right; font-weight:800; color:var(--muted); }
+
+  .card{ background: rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:20px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,.35); }
+  .controls, .question, .results, .certificate{ padding:clamp(16px,2.6vw,28px); }
+  .row{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .row > *{ flex:1 1 160px; }
+  .btn{ border:none; border-radius:14px; padding:12px 16px; font-weight:800; cursor:pointer; background:linear-gradient(180deg, #f59e0b, #d97706); color:#1f1300; box-shadow:0 10px 25px rgba(245,158,11,.25); transition:transform .05s ease, filter .2s ease; }
+  .btn:active{ transform:translateY(1px) scale(.99); }
+  .btn.alt{ background:linear-gradient(180deg, #8b5cf6, #6d28d9); color:#120d20; box-shadow:0 10px 25px rgba(139,92,246,.25); }
+  .btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,.15); color:var(--text); }
+  .btn.red{ background:linear-gradient(180deg, #ef4444, #b91c1c); color:#fff; box-shadow:0 10px 25px rgba(239,68,68,.25); }
+  .meter{ display:none; } /* hide old meter */
+
+  .question h2{ margin:0 0 8px; font-size:clamp(1.05rem,2.6vw,1.5rem); }
+  .meta{ color:var(--muted); font-size:.95rem; margin-bottom:10px; display:flex; gap:12px; flex-wrap:wrap; }
+  .choices{ display:grid; gap:10px; margin-top:10px; }
+  .choice{ display:flex; gap:12px; align-items:center; cursor:pointer; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.10); padding:12px; border-radius:16px; transition:transform .05s ease, background .2s ease, border-color .2s ease, filter .2s ease; }
+  .choice:hover{ background:rgba(255,255,255,.08); }
+  .choice input{ display:none; }
+  .tag{ width:28px; height:28px; display:grid; place-items:center; border-radius:10px; font-weight:900; background:linear-gradient(180deg, #06b6d4, #22c55e); color:#002b2b; }
+  .status{ margin-top:10px; font-weight:900; }
+  .status.right{ color:var(--right); } .status.wrong{ color:var(--wrong); }
+  .toolbar{ display:flex; gap:10px; align-items:center; justify-content:space-between; padding:12px 16px; border-top:1px solid rgba(255,255,255,.08); background:rgba(0,0,0,.2); }
+  .pill{ background:rgba(255,255,255,.08); padding:8px 12px; border-radius:999px; }
+  .muted{ color:var(--muted); }
+
+  /* Splash */
+  .splash{
+    position:fixed; inset:0; display:grid; place-items:center; background: radial-gradient(1200px 500px at 10% 0%, rgba(14,165,233,.35), transparent 60%), radial-gradient(1200px 500px at 90% 0%, rgba(139,92,246,.35), transparent 60%), linear-gradient(135deg, #0b1020 0%, #0f172a 100%);
+    z-index: 10;
+  }
+  .splash .panel{
+    background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:24px; padding:28px; width:min(800px, 92vw); text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.45);
+  }
+  .splash h1{ font-size:clamp(1.6rem,4vw,2.6rem); margin:0 0 12px; }
+  .emoji{ font-size: clamp(1.6rem,4vw,3rem); }
+
+  /* Certificate */
+  .certificate{ display:none; background: linear-gradient(180deg, rgba(245,158,11,.12), rgba(139,92,246,.12)); }
+  .cert-card{ margin-top:12px; padding:24px; background:white; color:#222; border-radius:18px; border:6px double #222; background-image: radial-gradient(#ffd166 1px, transparent 1px), radial-gradient(#ffd166 1px, transparent 1px); background-position: 0 0, 10px 10px; background-size: 20px 20px; }
+  .cert-title{ font-size:clamp(1.4rem,3vw,2rem); text-align:center; margin:4px 0 8px; }
+  .cert-sub{ text-align:center; color:#444; margin:0 0 12px; }
+  .cert-name{ text-align:center; font-size:clamp(1.3rem,2.4vw,1.6rem); font-weight:900; margin:8px 0; }
+  .cert-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-top:10px;}
+  .sticker{ font-size:42px; }
+  .sig{ text-align:right; font-family: "Comic Sans MS", "Comic Sans", cursive; font-size: 1.1rem; }
+  .hidden{ display:none !important; }
+
+  /* Visual effects */
+  @keyframes flashFade { from { opacity: 1; } to { opacity: 0; } }
+  .flash {
+    position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(circle at center, rgba(255,255,255,.45), rgba(239,68,68,.25) 30%, transparent 60%);
+    animation: flashFade 240ms ease-out forwards;
+    z-index: 20;
+  }
+  @keyframes shake {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(4px, -2px); }
+    50% { transform: translate(-3px, 3px); }
+    75% { transform: translate(3px, 1px); }
+    100% { transform: translate(0, 0); }
+  }
+  .shake { animation: shake 220ms ease-in-out 1; }
+
+  /* Toast */
+  .toast{
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,.8); color: #fff; padding: 10px 16px; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35); z-index: 9999; opacity: 0; transition: opacity .2s ease, transform .2s ease;
+  }
+  .toast.show{ opacity: 1; transform: translateX(-50%) translateY(-6px); }
+  @media (max-width:540px){ .row > *{ flex:1 1 100%; } }
+</style>
+</head>
+<body>
+  <!-- Splash intro -->
+  <div class="splash" id="splash">
+    <div class="panel">
+      <div class="emoji">🎉📜🧠</div>
+      <h1>Professional Certification in Contracting Quiz</h1>
+      <p class="muted">100 questions. Multiple choice. Click an answer and only the correct one remains. Ready to flex those contracting skills?</p>
+      <div class="row" style="justify-content:center; margin-top:12px;">
+        <button class="btn" id="splashStart">Start</button>
+        <button class="btn alt" id="splashRandom">Randomize & Start</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app" id="appRoot">
+    <div class="title">
+      <h1>🎉 Professional Certification in Contracting Quiz</h1>
+      <span class="badge" id="scoreBadge">Score: 0</span>
+    </div>
+
+    <!-- Fancy progress -->
+    <div class="fancy-wrap">
+      <div class="fancy-progress">
+        <div class="bar" id="fancyBar"></div>
+        <div class="spark" id="spark"></div>
+      </div>
+      <div class="progress-label" id="fancyLabel">0 / 0 (0%)</div>
+    </div>
+
+    <div class="card">
+      <div class="controls" id="controls">
+        <div class="row">
+          <button class="btn" id="startBtn">Start</button>
+          <button class="btn alt" id="randomBtn">Randomize</button>
+          <button class="btn ghost" id="showAllBtn">Preview All</button>
+        </div>
+        <p class="muted" style="margin-top:8px;">Loaded <strong id="totalCount">0</strong> Q&As. Click an answer to reveal ONLY the correct one.</p>
+      </div>
+
+      <div class="question" id="question" style="display:none;"></div>
+
+      <div class="results" id="results" style="display:none;"></div>
+
+      <div class="certificate" id="certificate">
+        <div class="cert-card" id="certCard">
+          <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
+            <div class="sticker">🏆</div>
+            <div class="cert-title" id="certTitle">Certificate of Contracting Awesomeness</div>
+            <div class="sticker">🎓</div>
+          </div>
+          <div class="cert-sub" id="certSubtitle">Presented to</div>
+          <div class="cert-name"><input id="nameInput" placeholder="Type your name" style="font:inherit; font-weight:900; text-align:center; border:none; border-bottom:2px dotted #444; outline:none; width:min(420px, 80%);" /></div>
+          <div class="cert-sub" id="certBody">For bravely battling 100 questions and scoring <span id="certScore">0%</span>. <span id="certEmoji">🥳</span></div>
+          <div class="cert-row">
+            <div>Signed: <span class="sig">Chief of Quizness</span> 🤝</div>
+            <div class="sticker" id="resultSticker">✨</div>
+          </div>
+          <div class="row" style="margin-top:12px; justify-content:center;">
+            <button class="btn alt" id="downloadCert">Download as PNG</button>
+            <button class="btn ghost" id="printCert">Print</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="row" style="flex:1 1 auto;">
+          <button class="btn ghost" id="prevBtn" disabled>⟵ Back</button>
+          <button class="btn" id="nextBtn" disabled>Next ⟶</button>
+          <button class="btn alt" id="shuffleBtn">🔀 Shuffle</button>
+          <button class="btn red" id="resetBtn">Reset</button>
+        </div>
+        <div class="pill muted" id="stepPill">0 / 0</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="application/json" id="quiz-data">[{"q": "Who develops a solicitation?", "options": ["The government", "The offeror", "The seller", "An airmen"], "answerIndex": 0}, {"q": "Who prepares an offer?", "options": ["The buyer", "The contractor", "The government", "The mission partner"], "answerIndex": 1}, {"q": "During the post-award phase while the contract is being performed, who has responsibility for quality?", "options": ["The Contracting Officer", "The QAPC", "The Buyer", "The Seller"], "answerIndex": 3}, {"q": "What FAR part governs personal conflict of interest?", "options": ["FAR part 5", "FAR part 4", "FAR part 6", "FAR part 3"], "answerIndex": 3}, {"q": "What FAR part governs organizational conflict of interest?", "options": ["FAR part 9", "FAR part 12", "FAR part 42", "FAR part 51"], "answerIndex": 0}, {"q": "Openness for the contracting officer applies primarily to?", "options": ["The acquisition team (except the contractor)", "Only the government", "The acquisition team", "Only the subcontractor"], "answerIndex": 2}, {"q": "You need to document a business decision, such as the use of a specific contract type. What document will you create?", "options": ["A determination and findings", "a memorandum for record", "A statement of fact", "A justification and approval"], "answerIndex": 0}, {"q": "According to the FAR, acceptance of supplies or services is the responsibility of whom?", "options": ["The project manager (or designated representative)", "The quality assurance representative (QAR)", "The contracting officer", "The plant clearance officer"], "answerIndex": 2}, {"q": "At the conclusion of negotiations, the contracting officer will complete a…", "options": ["Post Negotiation Memorandum", "Negotiation completion memorandum (NCM)", "Price Objective Memorandum (POM)", "Preliminary Price Negotiation Memorandum (PPNM)"], "answerIndex": 0}, {"q": "Prior to negotiating a sole source contract, the contracting officer must complete a…", "options": ["Determinations and Findings", "Justification and Approval", "Limit Competition Memorandum", "Sole Source Proclamation"], "answerIndex": 1}, {"q": "Which of the following statements is accurate regarding Acquisition Teams?", "options": ["The Acquisition Team includes only representatives of the technical, supply, and procurement communities and the customers they serve.", "Due to privity of contract, only prime contractors (and not subcontractors) are part of the Acquisition Team.", "The Acquisition Team includes representatives of the technical, supply, and procurement communities, the customers they serve, and the contractors who provide the products and services.", "The Acquisition Team's activities conclude after contract award."], "answerIndex": 2}, {"q": "Which of the following contract modifications must be signed by both the contractor and the contracting officer?", "options": ["An administrative change", "A termination notice", "An agreement definitizing a letter contract", "Exercising an option within the scope of the contract"], "answerIndex": 2}, {"q": "Unless an exception exists, and in accordance with FAR part 15-Contracting by Negotiations noncommercial contracts and solicitations will be awarded utilizing what contract format?", "options": ["The appropriate service (Army, Air Force, or Navy) format", "The major command's contract format", "The format as designated by the head of the contracting activity (HCA) for the appropriate service", "The uniform contract format"], "answerIndex": 3}, {"q": "Government business shall be conducted in a manner that is above reproach, with complete impartiality, and with preferential treatment for none.", "options": ["No.", "No, except when the situation allows.", "Yes.", "Yes, but only when in the best interest of the government"], "answerIndex": 2}, {"q": "No person or other entity may disclose contractor bid or proposal information or source selection information to any person other than a person authorized, in accordance with applicable agency regulations or procedures, by the agency head or the contracting officer to receive such information.", "options": ["Yes.", "No.", "Yes, but the government can when it will get them a better price.", "False."], "answerIndex": 0}, {"q": "The Anti-Kickback Act of 1986 prohibits any person from doing the following EXCEPT…", "options": ["Providing, attempting to provide, or offering to provide any kickback", "Soliciting, accepting, or attempting to accept any kickback", "Accepting a gift worth $100 throughout the course of a calendar year.", "Including, directly or indirectly, the amount of a kickback in the contract price charged by a subcontractor to a prime contractor or a higher tier subcontractor or in the contract price charged by a prime contractor to the United States."], "answerIndex": 2}, {"q": "Which FAR part is titled \"Subcontracting Policies and Procedures\"?", "options": ["FAR part 43", "FAR part 44", "FAR part 45", "FAR part 46"], "answerIndex": 1}, {"q": "Federal employees are prohibited from soliciting or accepting gifts offered \"because of the employee's official position\" or gifts offered by a \"prohibited source.\"", "options": ["False", "True", "True, unless approved by the head of contracting activity.", "False, unless the contracting officer needs the money."], "answerIndex": 1}, {"q": "A \"personal conflict of interest\" is a situation where an individual is employed by a defense contractor company and is in a position to materially influence DOD's recommendation and/or decisions and, because of his/her personal activities, relationships, or financial interests, may lack or appear to lack objectivity or appear to be unduly influenced by personal financial interest.", "options": ["No.", "False, that is an organizational conflict of interest.", "Yes.", "True, unless it is a spouse."], "answerIndex": 2}, {"q": "Which of these are NOT a broad category of Organizational Conflict of Interest?", "options": ["Unequal access", "Impaired objectivity", "Biased ground rules", "Source Selection Sensitive"], "answerIndex": 3}, {"q": "One day after publicizing and releasing a solicitation, the contracting officer realizes that the contract line items need to be reorganized. The contracting officer must:", "options": ["Leave the solicitation as is and plan to modify the contract after award", "Wait to see if offerors have issues with the current contract line item structure", "Amend the solicitation, changing the contract line items", "Publicize an advisory letter with the new contract line item structure"], "answerIndex": 2}, {"q": "Which of the following entities has privity with a first-tier subcontractor?", "options": ["The contracting officer", "The prime contractor", "The Defense Contract Management Agency (DCMA)", "The Defense Contract Audit Agency (DCAA)"], "answerIndex": 1}, {"q": "A contractor failed to deliver a commercial item within the time specified by the contract. As the Government contracting officer, you plan to terminate the contract. What type of termination would you proceed with?", "options": ["Termination for Convenience", "Termination for Default", "Termination for Cause", "Termination for Late Deliveries - Commercial/Noncommercial"], "answerIndex": 2}, {"q": "Which of the following modifications must be issued bilaterally?", "options": ["Making administrative changes", "Making a negotiated equitable adjustment caused by a change order", "Issuing a change order", "Issuing a termination notice"], "answerIndex": 1}, {"q": "What is the tool (form) used by DoD to apply a structured profit/fee?", "options": ["DD Form 1202, Guidelines for Profit Method", "DD Form 1701, Structured Analogy Method", "DD Form 1547, Weighted Guidelines Method", "DD Form 1861, Weighted Profit Analogy"], "answerIndex": 2}, {"q": "You've received a claim on your contract. The contractor is required to certify its claim above what amount?", "options": ["100000", "10000", "$10 million", "$100 million"], "answerIndex": 0}, {"q": "Select the statement that is NOT conducive toward forming a cohesive team.", "options": ["The Government should foster a cooperative working relationship with contractors consistent with its overriding responsibility to the taxpayers.", "The contracts office and the program office should be synchronized as it relates to the end goal.", "The Government should foster an \"arm's length\" approach for an effective relationship.", "Good communication is important in building a cohesive team."], "answerIndex": 2}, {"q": "Which of the following are limited exchanges between the Government and offerors that may occur when award without discussions is contemplated?", "options": ["Negotiations", "Discussions", "Clarifications", "Communications"], "answerIndex": 2}, {"q": "A contractor is developing their pricing strategy in a competitive environment. Knowing the required effort will result in follow-on contracts, the contractor submits an offer below anticipated costs with the plan to recover any losses by increasing the price on follow-on efforts. This pricing strategy is referred to as:", "options": ["Unbalanced pricing", "Buying-in", "Defective pricing", "Marginal value pricing"], "answerIndex": 1}, {"q": "Which of the following is accurate about unilateral modifications?", "options": ["Are only signed by a Government contracting officer, not the contractor", "Can be signed by the contract specialist", "Are used to definitize contracts with price changes", "Are used to add scope to a contract"], "answerIndex": 0}, {"q": "Which of these are NOT a basic approach available to contractors and the Agency for dealing with Organizational Conflict of Interest issues?", "options": ["Avoid", "Neutralize", "Mitigate", "Substantiate"], "answerIndex": 3}, {"q": "Which FAR part sets forth the basic policies and general information about the Federal Acquisition Regulation System?", "options": ["FAR part 1", "FAR part 2", "FAR part 52", "FAR part 53"], "answerIndex": 0}, {"q": "The primary vision of the Federal Acquisition System consists of:", "options": ["Acquisition process participants should work together as a team, but decision-making should be at a higher level.", "Deliver on a timely basis the best-value products and services to the customer, and maintain the public's trust while fulfilling public policy objectives.", "Deliver supplies, services, and construction at the cheapest cost possible.", "Supporting small businesses around the world."], "answerIndex": 1}, {"q": "Which of these is NOT a life-cycle contracting cost?", "options": ["Acquisition Costs", "Supporting Costs", "Operating Costs", "Entertainment Costs"], "answerIndex": 3}, {"q": "Which of the following is the correct title of a solicitation for negotiated procedures?", "options": ["Invitation for Proposals", "Request for Proposals", "Request for Cost Proposals", "Invitation for Pricing"], "answerIndex": 1}, {"q": "According to the FAR, the acquisition team:", "options": ["Includes the contractor", "Does not include the contractor", "Includes the contractor for sole source buys only", "Includes the contractor for competitive buys only"], "answerIndex": 0}, {"q": "A program manager asked John whether a contract clause is only used in the contract or if it applies to the solicitation as well. John correctly answered by replying with which of the following statements?", "options": ["A contract clause only applies after contract award", "A contract clause applies unless superseded by a solicitation provision", "A contract clause is a term or condition used in contracts, or in both solicitations and contracts, that applies after contract award or both before and after award", "A contract clause is a term or condition used in contracts and solicitations unless the resulting contract is for, commercial item."], "answerIndex": 2}, {"q": "To be determined responsible by a contracting officer, a prospective contractor must:", "options": ["Have adequate financial resources to perform the contract, or the ability to obtain them", "Not have any current or pending civil or criminal cases against it", "Be fully compliant with all cost accounting standards (CAS)", "Be approved by the Small Business Administration (SBA)"], "answerIndex": 0}, {"q": "What type of contract should be used for an item that uses a very large amount of gold and other precious metals in the manufacturing process?", "options": ["Fixed-price with economic price adjustment", "Firm-fixed-price with performance-based payments", "Cost plus award fee", "Time and materials"], "answerIndex": 0}, {"q": "Select the order for the proposal evaluation process.", "options": ["Award the contract, evaluate initial proposals, determine the competitive range, negotiate, request final pro­posal revisions", "Determine the competitive range, evaluate initial proposals, negotiate, request final proposal revisions, award the contract", "Evaluate initial proposals, negotiate, determine the competitive range, request final proposal revisions, award the contract", "Evaluate initial proposals, determine the competitive range, negotiate, request final proposal revisions, award the contract"], "answerIndex": 3}, {"q": "Which FAR part is the best source of information regarding competition requirements?", "options": ["FAR part 1", "FAR part 6", "FAR part 7", "FAR part 13"], "answerIndex": 1}, {"q": "Which of the following is an exception to obtaining certified cost or pricing data?", "options": ["Adequate price competition", "Sole source acquisition", "Subcontractor contracts", "Noncommercial item"], "answerIndex": 0}, {"q": "Government contract types are grouped into two broad categories: fixed-price contracts and:", "options": ["Variable-cost contracts", "Cost-reimbursement contracts", "Cost contracts", "Definitized contracts"], "answerIndex": 1}, {"q": "During discussions, the contracting officer:", "options": ["Should discuss aspects of an offeror's proposal if alterations or explanations would enhance the proposal's potential for award", "Must pursue obtaining what is best for the Government value irrespective of the evaluation factors set forth or the solicitation", "May not negotiate with offerors for increased performance beyond mandatory minimums", "May favor one offeror over another during discussions"], "answerIndex": 0}, {"q": "Market research shall be conducted…", "options": ["Only after release of a solicitation but prior to receiving proposals.", "Only after receiving proposals, but prior to making award.", "On an ongoing basis and appropriate to the circumstances", "Only prior to releasing a solicitation"], "answerIndex": 2}, {"q": "The contracting officer is responsible for initiating contract closeout procedures after the contracting officer receives:", "options": ["A final audit from the Inspector General", "A written request for contract closeout from the contractor", "Notice that the last item has been delivered", "Evidence of physical completion"], "answerIndex": 3}, {"q": "When using invitations for bids (IFBs), what type(s) of contracts can be awarded?", "options": ["Any contract type that does not have an incentive", "Any fixed-price contract type", "Any type or combination of types as determined necessary by the contracting officer", "Only firm-fixed-price contracts or fixed-price contracts with economic price adjustment"], "answerIndex": 3}, {"q": "Joan stated that she was working on selecting solicitation provisions. With this in mind, you know the contract:", "options": ["Is ready for closeout", "Was recently awarded", "Is nearing completion", "Has not been awarded"], "answerIndex": 3}, {"q": "Whenever a contracting officer is required to publicize notice of proposed contract actions in the Governmentwide point of entry (GPE), they must:", "options": ["Allow a different response time for each potential offeror in order to promote better competition", "Establish a common response time for all offerors from the date of publication", "Include the independent Government estimate for the requirement", "Include the most current budget for the resulting contract"], "answerIndex": 1}, {"q": "Which authority is legally binding in Government contracting and recognized by the courts?", "options": ["Actual Authority", "Apparent Authority", "Guaranteed Authority", "Interpreted Authority"], "answerIndex": 0}, {"q": "Which of the following are NOT essential elements of a contract?", "options": ["Common Ground", "Mutual Assent", "Lawful Purpose", "Consideration"], "answerIndex": 0}, {"q": "How many parts are there in the FAR?", "options": ["52", "53", "2", "10"], "answerIndex": 1}, {"q": "The competitive procedures available for use in fulfilling the requirement for full and open competition are NOT -", "options": ["Sealed bids", "Competitive proposals", "Set-aside", "Combination of competitive procedures"], "answerIndex": 2}, {"q": "The contracting officer shall take which of the following actions to encourage small business participation in acquisitions?", "options": ["Encourage small businesses to subcontract to large businesses.", "Bundle or consolidate acquisitions.", "Abbreviate delivery schedules to decrease the likelihood of large businesses proposing.", "Divide acquisitions into reasonably small lots to permit offers on quantities less than the total requirement"], "answerIndex": 3}, {"q": "Can a contractor file a protest at any time it chooses?", "options": ["Yes", "No, it must protest within 152 days of contract award.", "No, it only has 2 days from contract award to file a protest", "No, there are established timeframes within which a contractor must file its protest."], "answerIndex": 3}, {"q": "Which of the following statutory authorities do NOT permit contracting without providing for full and open competition:", "options": ["Unusual and compelling urgency", "Lack of advanced planning on the part of the requirements activity", "National security", "Public Interest"], "answerIndex": 1}, {"q": "The DoD Procurement Instrument Identifier (PIID) is 13 positions long. Position 9 identifies the type of instrument. If position 9 is a \"D\", which of the following types of instruments is representative?", "options": ["Indefinite-delivery contracts to include IDIQs and requirements contracts", "Contracts of all types except indefinite-delivery contracts", "Invitations for bids (IFBs)", "Blanket purchase agreements (BPAs)"], "answerIndex": 0}, {"q": "Which term means the total cost to the Government of acquiring, operating, supporting, and (if applicable) disposing of the items being acquired?", "options": ["Total costs of ownership", "Life-cycle costs", "True program costs", "Total costs of management"], "answerIndex": 1}, {"q": "A post award orientation aids both Government and contractor personnel to:", "options": ["Achieve a clear and mutual understanding of all contract requirements and identify and resolve potential problems", "Discuss and further develop the Performance Work Statement", "Meet all stakeholders in person in order to brainstorm how to make the contract less costly", "Develop and understand the contractor's quality control plan"], "answerIndex": 0}, {"q": "What part of the FAR covers terminations?", "options": ["FAR part 46", "FAR part 47", "FAR part 48", "FAR part 49"], "answerIndex": 3}, {"q": "Josh, a Government contract specialist, received several offers on a request for proposal (RFP) that was set aside for a small business. In order to avoid unnecessary work, what should be the first thing Josh should ensure when he reviews each proposal?", "options": ["The pricing matrix is reasonable when compared to the Government estimate and other proposals.", "The proposal is from a small business.", "The offeror has addressed all of the evaluation factors listed in Section M.", "The offeror has included a bid bond in an amount sufficient to cover 20% of its offer price."], "answerIndex": 1}, {"q": "Which is NOT an excusable delay?", "options": ["Acts of the government in either it's sovereign or contractual capacity", "Fires", "Freight embargoes", "Bad weather"], "answerIndex": 3}, {"q": "Which section of the uniform contract format (UCF) exists to include negotiated, meaningful special contract requirements that are not included in Section I, Contract clauses, or in other sections of the UCF?", "options": ["Section B", "Section C", "Section G", "Section H"], "answerIndex": 3}, {"q": "What is a type of termination for a non-commercial contract?", "options": ["Termination for late delivery", "Termination for Convenience", "Termination for Cause", "Termination Because"], "answerIndex": 1}, {"q": "In which circumstance would the government NOT issue a cure notice?", "options": ["The contractor is performing adequately.", "Contractor fails to make progress and performance is endangered", "Performance problems do not involve terms for delivery.", "At least 10 days remain for contract performance and correction of the problem can be reasonably expected in the time remaining."], "answerIndex": 0}, {"q": "When late in paying an otherwise acceptable invoice, the Government will:", "options": ["Negotiate consideration", "Submit a claim", "NOT pay an interest penalty", "Pay an interest penalty"], "answerIndex": 3}, {"q": "Which contract type shifts cost risk from the Government to the contractor?", "options": ["Labor-hour", "Fixed-price", "Time-and-materials", "Cost-reimbursement"], "answerIndex": 1}, {"q": "Where in the FAR can you find guidance on how to establish, maintain, and dispose of Government contract files?", "options": ["FAR part 4", "FAR part 5", "FAR part 6", "FAR part 7"], "answerIndex": 0}, {"q": "A show cause is used either after the cure notice fails to correct the delinquency or when there is insufficient time remaining in the schedule - less than __ days.", "options": ["15", "60", "30", "10"], "answerIndex": 3}, {"q": "Which of the following best describes the purpose of proposal analysis?", "options": ["To ensure the price is fair and reasonable", "To validate the Government requirement is met", "To determine if the proposal follows commercial practices", "To evaluate the specifications of the product or service"], "answerIndex": 0}, {"q": "Which of the following is NOT a Government policy of describing agency needs?", "options": ["Promote full and open competition", "Minimize restrictive provisions", "State requirements in terms of function, performance, and essential physical characteristics", "Only A and B"], "answerIndex": 3}, {"q": "Which of the following is NOT part of conducting Requirement Analysis?", "options": ["Ensuring the mission partner included their preferred vender for consideration.", "Describing the work in terms of required results, rather than either \"how\" the work is to be accomplished or the number of hours to be provided.", "Identifying the essential processes and outputs or results required", "Conducting a systematic review of your requirement given the guidance captured from stakeholders during the planning phase"], "answerIndex": 0}, {"q": "A contracting officer has the broadest discretion in fashioning suitable evaluation procedures when considering:", "options": ["Proposals", "Bids", "Unsolicited proposals", "Quotations"], "answerIndex": 3}, {"q": "Which of the following would represent, or potentially represent, an organizational conflict of interest (OCI)?", "options": ["A contractor (contractor X) is hired to develop and produce a particular product for the Government that cur­rently does not exist. In developing the product , the contractor uses its own proprietary methods.", "An engineering support contractor (contractor A) is hired to assist in the development of Government specifi­cations for a new requirement. Contractor A writes the specifications in such a way as to require the Government's use of contractor A's proprietary processes even though there are other solutions.", "A contractor (contractor X) is hired to fill an order of 50 widgets. In filling the order, the contractor supplies its own proprietary product.", "An engineering support contractor (contractor A) is hired to develop specifications for a new requirement. Contractor A writes the specifications and does not later submit a proposal in response to an RFP for the new requirement."], "answerIndex": 1}, {"q": "Change orders issued under the changes clause of the contract use which form?", "options": ["SF 30", "SF 33", "SF 44", "SF 1449"], "answerIndex": 0}, {"q": "The purpose of exchanging information with industry before receipt of proposals is to:", "options": ["Always obtain the lowest price for Government requirements", "Find a sole source contractor to meet the Government's requirements", "Negotiate the best deal in response to the Government's requirements", "Improve the understanding of Government requirements and industry capabilities"], "answerIndex": 3}, {"q": "Which event is meant to aid both the Government and contractor personnel to 1) achieve a clear and mutual understanding of all contract requirements, and (2) identify and resolve potential problems after contract award?", "options": ["Site visit", "Pre-solicitation conference", "Industry day", "Post award orientation conference"], "answerIndex": 3}, {"q": "When using FAR part 12 procedures, the technical evaluation would normally include examination of such things as product literature, product samples (if requested), technical features, and:", "options": ["Management plans", "Manufacturing plans", "Quality assurance plans", "Warranty provisions"], "answerIndex": 3}, {"q": "What is a Procurement Instrument Identifier (PIID)?", "options": ["A unique number identifying a contract", "A unique number identifying a policy to a contract clause", "A unique number identifying a funding document", "A unique number identifying each solicitation, contract, agreement, or order and related procurement instrument"], "answerIndex": 3}, {"q": "What are the two types of market research?", "options": ["Tactical and Operational", "Tactical and Strategic", "Operational and Strategic", "Operational and Systems"], "answerIndex": 1}, {"q": "What are two forms of Cost Plus Fixed Fee contracts?", "options": ["Term and Completion", "Term and Incentive", "Incentive and Completion", "Partial Completion and Fully Complete"], "answerIndex": 0}, {"q": "One reason the FAR encourages exchanges with industry before receipt of proposals is to…", "options": ["Decrease the liklihood of award protests.", "Determine the best value source in advance.", "Publicize the rigidity of the governments requirements.", "Improve the goverments understanding of industry capabilities."], "answerIndex": 3}, {"q": "Prior to receipt of proposals, one-on-one meeting with potential offerors are?", "options": ["Encouraged", "Prohibited", "Discouraged", "Mandatory"], "answerIndex": 0}, {"q": "Defining DoD acquisition requirements so they can be met with commercial items is?", "options": ["Risky", "Discouraged", "Preferred", "Prohibited"], "answerIndex": 2}, {"q": "With respect to the requirements of law, executive orders, regulations, and all other applicable procedures, prior to signing a contract, a contracting officer must:", "options": ["Document noncompliance", "Ensure that each has been met", "Obtain legal validation that each has been met", "Ensure that all statutory requirements have been met and try to ensure all regulations or applicable procedure have been followed"], "answerIndex": 1}, {"q": "Industry participation in improving military acquisition requirements is?", "options": ["Discouraged", "Prohibited", "Unethical", "Encouraged"], "answerIndex": 3}, {"q": "A solicitation provision might", "options": ["Tell a potential offeror how it's proposal will be evaluated and considered for selection for award", "Legally bind a contractor to deliver a product that meets a technical specification", "Describe all agency requirements in the foreseeable future", "Contractually obligate a contractor to submit supporting documentation."], "answerIndex": 0}, {"q": "A contract clause might?", "options": ["Tell an offeror the maximum number of pages that can be included in a proposal.", "Announce the time and place for a pre-proposal conference.", "Establish the bid opening time and date.", "Require a contractor to deliver an item by a specific date."], "answerIndex": 3}, {"q": "Acme Company did not make the competitive range in a source selection. When the contracting officer asks for final proposal revisions, the contracting officer:", "options": ["Will not contact Acme Company since it is no longer in the competition", "Will contact Acme Company since it can still submit a final proposal revision", "Has the option to either contact Acme Company and request a final proposal revision or not contact Acme Company", "Must advise Acme Company that it may not submit a final proposal revision"], "answerIndex": 0}, {"q": "The TEXT of required contract clauses and solicitation provisions is found…", "options": ["Only in specific contracts", "Throughout the FAR", "In FAR part 52", "In either FAR part 12, 13, 14, or 15"], "answerIndex": 2}, {"q": "What type(s) of contracts can be awarded when acquiring commercial items or supply?", "options": ["Only firm-fixed-price contracts or fixed-price contracts with economic price adjustment", "Any contract type that does not have an incentive", "Any fixed-price contract type", "Any type or combination of types as determined necessary by the contracting officer"], "answerIndex": 0}, {"q": "Agencies shall conduct market research:", "options": ["In the same manner for all acquisitions for consistency purposes", "Only if unsure of adequate competition", "Appropriate to the circumstances", "Until release of the solicitation"], "answerIndex": 2}, {"q": "What is the preferred method to make a purchase at or below the micro-purchase threshold?", "options": ["Governmentwide commercial purchase card", "Purchase order", "Blanket purchase agreement", "Standard Form 44 (SF 44)"], "answerIndex": 0}, {"q": "Two neighbors do not get along very well. One is a contracting officer, and the other works for an auto dealership, that has no contracts with the Government. The auto dealership employee decided to file a protest to a contract that was just awarded, knowing it would add extra work to the contracting officer's day. Can the contracting officer's neighbor file a protest as an interested party?", "options": ["Yes.", "Yes, if he is a resident of the United States and has not had a felony conviction.", "No.", "No, because only business owners can file a protest, and his neighbor is an employee, not a business owner."], "answerIndex": 2}, {"q": "In the FAR, the term \"discussions\" is synonymous with which of the following?", "options": ["Banter", "Exchanges", "Fact-findings", "Negotiations"], "answerIndex": 3}, {"q": "Select the action performed early in the acquisition cycle versus at or near contract award.", "options": ["The acquisition plan is drafted and approved according to agency policy.", "The source selection decision is written.", "The unsuccessful offer notification is given.", "The post award debriefings are conducted."], "answerIndex": 0}, {"q": "It is the Government's policy that before executing a contract, the contracting officer must", "options": ["Obtain written assurance from the responsible fiscal authority that adequate funds are available", "Obtain written assurance from the paying office that adequate funds are available.", "Confirm that the Appropriations Bill has passed.", "Obtain written assurance from the head of the contracting office that adequate funds are available."], "answerIndex": 0}, {"q": "When a contractor submits a Certificate of Current Cost or Pricing data, it is certifying that:", "options": ["All contractor data \"sweeps\" have been accomplished.", "Negotiations have been completed, and the parties have come to agreement.", "The data submitted in support of a negotiations are current, accurate, and complete.", "The data it submitted to support negotiations has been properly notarized."], "answerIndex": 2}, {"q": "Terms that address specific types of exchanges with offerors after receipt of proposals include:", "options": ["Communications, discussions, and clarifications", "Discussions, explanations, and communications", "Clarifications, discussions, and explanations", "Conversations, clarifications, and discussions"], "answerIndex": 0}, {"q": "Which type of solicitation may require the submission of certified cost or pricing data?", "options": ["Micro purchase request", "Invitation for bids", "Request for quotations", "Request for proposals"], "answerIndex": 3}]</script>
+  <script>
+    // ===== Toast helper =====
+    function showToast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(()=> t.classList.remove('show'), 1200);
+    }
+
+    // ===== Visual effects =====
+    function kaboomExplosion(){
+      const app = document.getElementById('appRoot');
+      app.classList.add('shake');
+      setTimeout(()=> app.classList.remove('shake'), 260);
+
+      const flash = document.createElement('div');
+      flash.className = 'flash';
+      document.body.appendChild(flash);
+      setTimeout(()=> flash.remove(), 260);
+
+      if(typeof confetti === 'function'){
+        const base = { spread: 80, startVelocity: 52, gravity: 1.25, ticks: 90, scalar: 0.9, origin: {x:0.5, y:0.35}, colors: ['#ff3131','#ff6a00','#ffd166','#ffffff'] };
+        confetti({ ...base, particleCount: 160 });
+        confetti({ ...base, particleCount: 80, angle: 120, origin: {x:0.3, y:0.4} });
+        confetti({ ...base, particleCount: 80, angle: 60, origin: {x:0.7, y:0.4} });
+      }
+    }
+    function correctCelebration(){
+      if(typeof confetti === 'function'){
+        const originX = 0.1 + Math.random()*0.8;
+        confetti({ particleCount: 120, spread: 70, startVelocity: 35, gravity: 1.0, ticks: 120, origin: { x: originX, y: 0.2 }, scalar: 0.8 });
+      }
+    }
+
+    // ===== Data & State =====
+    const allItems = JSON.parse(document.getElementById('quiz-data').textContent);
+    document.getElementById('totalCount').textContent = allItems.length;
+
+    let items = allItems.slice();
+    let idx = 0;
+    let answered = new Array(items.length).fill(null); // {picked, correctIndex}
+    let score = 0;
+
+    function setFancyProgress(){
+      const total = items.length || 0;
+      const current = Math.min(idx, total-1);
+      const pct = total ? Math.round((current/total)*100) : 0;
+      const bar = document.getElementById('fancyBar');
+      const spark = document.getElementById('spark');
+      const label = document.getElementById('fancyLabel');
+      bar.style.width = pct + '%';
+      spark.style.left = pct + '%';
+      label.textContent = (current+1) + ' / ' + total + ' (' + pct + '%)';
+    }
+    function setStep(){
+      document.getElementById('stepPill').textContent = (items.length? (idx+1) : 0) + ' / ' + items.length;
+      document.getElementById('scoreBadge').textContent = 'Score: ' + score;
+      setFancyProgress();
+    }
+
+    function renderQuestion(){
+      const wrap = document.getElementById('question');
+      const q = items[idx];
+      if(!q){ return; }
+      wrap.style.display = 'block';
+      wrap.innerHTML = '';
+
+      const title = document.createElement('h2');
+      title.textContent = q.q;
+      wrap.appendChild(title);
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.innerHTML = `<span>Question ${idx+1} of ${items.length}</span>`;
+      wrap.appendChild(meta);
+
+      const choices = document.createElement('div');
+      choices.className = 'choices';
+
+      q.options.forEach((opt, i)=>{
+        const label = document.createElement('label');
+        label.className = 'choice';
+
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'choice';
+        radio.value = i;
+
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+        tag.textContent = String.fromCharCode(65+i);
+
+        const text = document.createElement('div');
+        text.textContent = opt;
+
+        label.appendChild(radio);
+        label.appendChild(tag);
+        label.appendChild(text);
+        choices.appendChild(label);
+      });
+
+      wrap.appendChild(choices);
+
+      const status = document.createElement('div');
+      status.className = 'status';
+      wrap.appendChild(status);
+
+      if(answered[idx]){
+        const corr = q.answerIndex;
+        Array.from(choices.children).forEach((lab, i)=>{
+          if(i !== corr) lab.style.display = 'none';
+          else { lab.style.borderColor = 'rgba(34,197,94,.8)'; lab.style.filter = 'drop-shadow(0 0 10px rgba(34,197,94,.25))'; }
+        });
+        status.className = 'status right';
+        status.textContent = `Correct answer: ${String.fromCharCode(65+corr)}. ${q.options[corr]}`;
+        document.getElementById('nextBtn').disabled = false;
+      } else {
+        document.getElementById('nextBtn').disabled = true;
+      }
+
+      choices.querySelectorAll('input[type="radio"]').forEach(inp=>{
+        inp.addEventListener('change', ()=>{
+          const picked = parseInt(inp.value, 10);
+          const corr = q.answerIndex;
+          const isRight = picked === corr;
+
+          if(isRight){
+            correctCelebration(); status.className = 'status right';
+            status.textContent = `Correct! Answer: ${String.fromCharCode(65+corr)}. ${q.options[corr]}`;
+          } else {
+            kaboomExplosion(); status.className = 'status wrong';
+            status.textContent = `Incorrect. Correct answer: ${String.fromCharCode(65+corr)}. ${q.options[corr]}`;
+          }
+          Array.from(choices.children).forEach((lab, i)=>{
+            if(i !== corr){ lab.style.display = 'none'; }
+            else { lab.style.borderColor = 'rgba(34,197,94,.8)'; lab.style.filter = 'drop-shadow(0 0 10px rgba(34,197,94,.25))'; }
+          });
+          if(isRight) score += 1;
+
+          answered[idx] = { picked, correctIndex: corr };
+          document.getElementById('nextBtn').disabled = false;
+          setStep();
+        }, { once: true });
+      });
+
+      document.getElementById('prevBtn').disabled = idx === 0;
+      setStep();
+    }
+
+    const PASS_MARK = 70;
+    function showCertificate(){
+      const total = items.length;
+      const correctKnown = answered.filter((a)=> a && a.picked === a.correctIndex).length;
+      const pct = Math.round((correctKnown/total)*100);
+
+      const cert = document.getElementById('certificate');
+      const title = document.getElementById('certTitle');
+      const body = document.getElementById('certBody');
+      const sticker = document.getElementById('resultSticker');
+
+      if(pct >= PASS_MARK){
+        title.textContent = '🎉 Certificate of Contracting Awesomeness';
+        body.innerHTML = `For conquering ${total} questions at <b>${pct}%</b>. You are now an honorary <b>Clause Whisperer</b>! 🦉📜`;
+        sticker.textContent = '🏆';
+      } else {
+        title.textContent = '😂 Certificate of Almost There';
+        body.innerHTML = `For valiantly attempting ${total} questions at <b>${pct}%</b>. Your contract with success is pending signature—try another round! 🤪`;
+        sticker.textContent = '🧠';
+      }
+      document.getElementById('certScore').textContent = pct + '%';
+      cert.style.display = 'block';
+      document.getElementById('results').scrollIntoView({behavior:'smooth'});
+    }
+
+    function renderResults(){
+      const wrap = document.getElementById('results');
+      const total = items.length;
+      const correct = answered.filter((a)=> a && a.picked === a.correctIndex).length;
+      const pct = Math.round((correct/total)*100);
+      wrap.innerHTML = `
+        <h2>Results</h2>
+        <p class="muted">You answered <strong>${correct}</strong> of <strong>${total}</strong> correctly (<strong>${pct}%</strong>).</p>
+        <div class="row" style="margin-top:8px;">
+          <button class="btn" id="restartBtn">Restart</button>
+          <button class="btn alt" id="randomizeAgainBtn">Randomize Again</button>
+          <button class="btn ghost" id="showCertBtn">Show Certificate</button>
+        </div>
+      `;
+      wrap.style.display = 'block';
+      document.getElementById('restartBtn').onclick = ()=>{ location.reload(); };
+      document.getElementById('randomizeAgainBtn').onclick = ()=>{ randomize(true); start(); };
+      document.getElementById('showCertBtn').onclick = ()=>{ showCertificate(); };
+    }
+
+    function shuffleArray(arr){
+      // Use crypto for better randomness if available
+      const rand = (max)=> {
+        if (window.crypto && window.crypto.getRandomValues) {
+          const u32 = new Uint32Array(1);
+          window.crypto.getRandomValues(u32);
+          return u32[0] % (max+1);
+        } else {
+          return Math.floor(Math.random() * (max+1));
+        }
+      };
+      for(let i=arr.length-1;i>0;i--){
+        const j = rand(i);
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    function randomize(showToastMsg){
+      shuffleArray(items);
+      idx = 0; score = 0; answered = new Array(items.length).fill(null);
+      setStep();
+      const questionVisible = document.getElementById('question').style.display !== 'none';
+      if(questionVisible){
+        renderQuestion();
+      }
+      if(showToastMsg) showToast('Shuffled! 🔀');
+    }
+
+    function start(){
+      document.getElementById('splash').classList.add('hidden');
+      document.getElementById('controls').style.display = 'none';
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('certificate').style.display = 'none';
+      document.getElementById('question').style.display = 'block';
+      renderQuestion();
+    }
+    function resetQuiz(){
+      if(!confirm('Reset the quiz? Your current progress will be cleared.')) return;
+      idx = 0; score = 0; answered = new Array(items.length).fill(null);
+      document.getElementById('results').style.display = 'none';
+      document.getElementById('certificate').style.display = 'none';
+      document.getElementById('question').style.display = 'block';
+      renderQuestion();
+      showToast('Reset ✅');
+    }
+
+    // Splash controls
+    document.getElementById('splashStart').addEventListener('click', ()=>{ start(); });
+    document.getElementById('splashRandom').addEventListener('click', ()=>{ randomize(true); start(); });
+
+    // Classic controls
+    document.getElementById('startBtn').addEventListener('click', ()=>{ start(); });
+    document.getElementById('randomBtn').addEventListener('click', ()=>{ randomize(true); start(); });
+    document.getElementById('showAllBtn').addEventListener('click', ()=>{
+      const wrap = document.getElementById('question');
+      wrap.style.display = 'block';
+      document.getElementById('controls').style.display = 'none';
+      wrap.innerHTML = '<h2>All Questions (Preview)</h2>';
+      const list = document.createElement('div');
+      list.className = 'choices';
+      items.forEach((q,i)=>{
+        const div = document.createElement('div'); div.className = 'choice';
+        div.innerHTML = '<div class="tag">'+String.fromCharCode(65)+'</div><div><strong>Q'+(i+1)+'.</strong> '+q.q+'<div class="muted" style="margin-top:6px;">'+q.options.map((o,j)=> String.fromCharCode(65+j)+'. '+o).join('<br/>')+'</div></div>';
+        list.appendChild(div);
+      });
+      wrap.appendChild(list);
+      document.querySelector('.toolbar').style.display = 'none';
+    });
+    document.getElementById('prevBtn').addEventListener('click', ()=>{ if(idx > 0){ idx -= 1; renderQuestion(); }});
+    document.getElementById('nextBtn').addEventListener('click', ()=>{
+      if(idx < items.length - 1){ idx += 1; renderQuestion(); }
+      else { document.getElementById('question').style.display='none'; renderResults(); }
+    });
+    document.getElementById('shuffleBtn').addEventListener('click', ()=>{
+      if(confirm('Shuffle the question order now? Your current progress will be cleared.')){
+        randomize(true);
+      }
+    });
+    document.getElementById('resetBtn').addEventListener('click', resetQuiz);
+  </script>
+</body>
+</html>
