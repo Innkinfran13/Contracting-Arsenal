@@ -6,21 +6,21 @@
   <title>Contracting Arsenal</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Minimal helper styles for PromptForge + buttons + quick nav -->
+  <!-- Minimal helper styles for PromptForge + buttons + centered headers -->
   <style>
-    .subtext { color:#6b7280; margin: 6px 0 14px; }
+    .subtext { color:#6b7280; margin: 6px 0 14px; text-align:center; }
     .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid #d1d5db; background:#111827; color:#fff; cursor:pointer; text-decoration:none; }
-    .btn.light { background:#fff; color:#111827; }
+    .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid #d1d5db; background:#fff; color:#111827; cursor:pointer; text-decoration:none; }
     .btn.copy { background:#0ea5e9; border-color:#0ea5e9; color:#001018; font-weight:700; }
-    form.pf { display:grid; gap:10px; max-width:720px; }
+    form.pf { display:grid; gap:10px; max-width:720px; margin:auto; }
     form.pf input, form.pf textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; }
     form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
     @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
     .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
-    nav.quick { margin-top: 8px; font-size: .95rem; }
-    nav.quick a { margin-right: 12px; text-decoration: none; color: #2563eb; }
+    nav.quick { margin-top: 8px; font-size: .95rem; text-align:center; }
+    nav.quick a { margin:0 12px; text-decoration: none; color: #2563eb; }
+    h2 { text-align:center; }
   </style>
 </head>
 <body>
@@ -29,8 +29,8 @@
       <h1>Contracting Arsenal</h1>
       <p>Collection of contracting tools, templates, study materials, and resources available to everyone.</p>
       <nav class="quick">
-        <a href="#knowledge-stockpile">Knowledge Stockpile</a>
-        <a href="#promptforge">PromptForge</a>
+        <a href="#knowledge-stockpile">📚 Knowledge Stockpile</a>
+        <a href="#promptforge">🔥 PromptForge</a>
         <a href="#contact">Contact</a>
       </nav>
     </div>
@@ -39,7 +39,7 @@
   <main class="container">
     <!-- ===================== Knowledge Stockpile ===================== -->
     <section id="knowledge-stockpile">
-      <h2>Knowledge Stockpile</h2>
+      <h2>📚 Knowledge Stockpile</h2>
       <div class="cards">
         <!-- Professional Certification Quiz -->
         <article class="card">
@@ -47,7 +47,7 @@
           <p>A browser-based quiz to practice and review contracting knowledge.</p>
           <div class="actions">
             <a class="btn" href="Professional%20Cert%20Contracting%20Quiz%20final.html" target="_blank" rel="noopener">Open</a>
-            <a class="btn light" href="Professional%20Cert%20Contracting%20Quiz%20final.html" download>Download</a>
+            <a class="btn" href="Professional%20Cert%20Contracting%20Quiz%20final.html" download>Download</a>
           </div>
         </article>
 
@@ -57,7 +57,7 @@
           <p>Interactive quiz covering FAR Parts 1–52. Great for practice.</p>
           <div class="actions">
             <a class="btn" href="FAR%20parts%20quiz.html" target="_blank" rel="noopener">Open</a>
-            <a class="btn light" href="FAR%20parts%20quiz.html" download>Download</a>
+            <a class="btn" href="FAR%20parts%20quiz.html" download>Download</a>
           </div>
         </article>
 
@@ -67,17 +67,17 @@
           <p>Quick checklist for supply actions under the Simplified Acquisition Threshold.</p>
           <div class="actions">
             <a class="btn" href="supply-under-sat-ko-checklist.html" target="_blank" rel="noopener">Open</a>
-            <a class="btn light" href="supply-under-sat-ko-checklist.html" download>Download</a>
+            <a class="btn" href="supply-under-sat-ko-checklist.html" download>Download</a>
           </div>
         </article>
 
         <!-- CORB Level 1 – Team Reviewer -->
         <article class="card">
           <h3>CORB Level 1 – Team Reviewer</h3>
-          <p>Spin‑the‑wheel group game for interactive learning and collaboration.</p>
+          <p>Spin-the-wheel group game for interactive learning and collaboration.</p>
           <div class="actions">
             <a class="btn" href="corb-level-1-team-reviewer.html" target="_blank" rel="noopener">Open</a>
-            <a class="btn light" href="corb-level-1-team-reviewer.html" download>Download</a>
+            <a class="btn" href="corb-level-1-team-reviewer.html" download>Download</a>
           </div>
         </article>
       </div>
@@ -88,7 +88,7 @@
       <h2>🔥 PromptForge</h2>
       <p class="subtext">Craft, share, and explore the best AI prompts for innovation and streamlined workflows.</p>
 
-      <!-- Submit Prompt (emails to you for now, since GitHub Pages is static) -->
+      <!-- Submit Prompt -->
       <article class="card">
         <h3>Submit Your Prompt</h3>
         <form class="pf" id="pf-form">
@@ -112,13 +112,13 @@
           </div>
           <div class="actions">
             <button type="submit" class="btn">Send via Email</button>
-            <button type="button" class="btn light" id="pf-clear">Clear</button>
+            <button type="button" class="btn" id="pf-clear">Clear</button>
           </div>
-          <p class="subtext">Note: submissions are emailed to <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>. We’ll review and add highlights to the gallery below.</p>
+          <p class="subtext">Note: submissions are emailed to <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>.</p>
         </form>
       </article>
 
-      <!-- Prompt Gallery (examples; add more by duplicating a card) -->
+      <!-- Prompt Gallery -->
       <div class="pf-grid">
         <article class="card">
           <span class="tag">Contracting</span>
@@ -153,8 +153,8 @@
     <section id="contact">
       <h2>Contact</h2>
       <p>
-        We’d love to hear from you!
-        Please send us an email if you have any inquiries, suggestions, or recommendations.
+        We’d love to hear from you!  
+        Please send us an email if you have any inquiries, suggestions, or recommendations.  
       </p>
       <p>
         📧 <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>
@@ -181,7 +181,7 @@
       });
     });
 
-    // Submit via email (mailto:)
+    // Submit via email
     const pfForm = document.getElementById('pf-form');
     const pfClear = document.getElementById('pf-clear');
     pfForm.addEventListener('submit', (e) => {
