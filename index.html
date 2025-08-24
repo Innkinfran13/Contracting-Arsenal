@@ -5,16 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contracting Arsenal</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Minimal helper styles for PromptForge + buttons + quick nav -->
+  <style>
+    .subtext { color:#6b7280; margin: 6px 0 14px; }
+    .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid #d1d5db; background:#111827; color:#fff; cursor:pointer; text-decoration:none; }
+    .btn.light { background:#fff; color:#111827; }
+    .btn.copy { background:#0ea5e9; border-color:#0ea5e9; color:#001018; font-weight:700; }
+    form.pf { display:grid; gap:10px; max-width:720px; }
+    form.pf input, form.pf textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; }
+    form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
+    nav.quick { margin-top: 8px; font-size: .95rem; }
+    nav.quick a { margin-right: 12px; text-decoration: none; color: #2563eb; }
+  </style>
 </head>
 <body>
   <header>
     <div class="container">
       <h1>Contracting Arsenal</h1>
       <p>Collection of contracting tools, templates, study materials, and resources available to everyone.</p>
+      <nav class="quick">
+        <a href="#knowledge-stockpile">Knowledge Stockpile</a>
+        <a href="#promptforge">PromptForge</a>
+        <a href="#contact">Contact</a>
+      </nav>
     </div>
   </header>
+
   <main class="container">
-    <section id="Knowledge Stockpile">
+    <!-- ===================== Knowledge Stockpile ===================== -->
+    <section id="knowledge-stockpile">
       <h2>Knowledge Stockpile</h2>
       <div class="cards">
         <!-- Professional Certification Quiz -->
@@ -22,56 +46,173 @@
           <h3>Professional Contracting Certification Quiz</h3>
           <p>A browser-based quiz to practice and review contracting knowledge.</p>
           <div class="actions">
-            <a href="Professional%20Cert%20Contracting%20Quiz%20final.html" target="_blank" rel="noopener">Open</a>
-            <a href="Professional%20Cert%20Contracting%20Quiz%20final.html" download>Download</a>
+            <a class="btn" href="Professional%20Cert%20Contracting%20Quiz%20final.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn light" href="Professional%20Cert%20Contracting%20Quiz%20final.html" download>Download</a>
           </div>
         </article>
+
         <!-- FAR Parts Quiz -->
         <article class="card">
           <h3>FAR Parts Quiz</h3>
           <p>Interactive quiz covering FAR Parts 1–52. Great for practice.</p>
           <div class="actions">
-            <a href="FAR%20parts%20quiz.html" target="_blank" rel="noopener">Open</a>
-            <a href="FAR%20parts%20quiz.html" download>Download</a>
+            <a class="btn" href="FAR%20parts%20quiz.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn light" href="FAR%20parts%20quiz.html" download>Download</a>
           </div>
         </article>
+
         <!-- Supply Under SAT KO Checklist -->
         <article class="card">
           <h3>Supply Under SAT KO Checklist</h3>
           <p>Quick checklist for supply actions under the Simplified Acquisition Threshold.</p>
           <div class="actions">
-            <a href="supply-under-sat-ko-checklist.html" target="_blank" rel="noopener">Open</a>
-            <a href="supply-under-sat-ko-checklist.html" download>Download</a>
+            <a class="btn" href="supply-under-sat-ko-checklist.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn light" href="supply-under-sat-ko-checklist.html" download>Download</a>
           </div>
         </article>
+
         <!-- CORB Level 1 – Team Reviewer -->
-<article class="card">
-  <h3>CORB Level 1 – Team Reviewer</h3>
-  <p>Spin‑the‑wheel group game for interactive learning and collaboration.</p>
-  <div class="actions">
-    <a href="corb-level-1-team-reviewer.html" target="_blank" rel="noopener">Open</a>
-    <a href="corb-level-1-team-reviewer.html" download>Download</a>
-  </div>
-</article>
-
+        <article class="card">
+          <h3>CORB Level 1 – Team Reviewer</h3>
+          <p>Spin‑the‑wheel group game for interactive learning and collaboration.</p>
+          <div class="actions">
+            <a class="btn" href="corb-level-1-team-reviewer.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn light" href="corb-level-1-team-reviewer.html" download>Download</a>
+          </div>
+        </article>
       </div>
-    <section id="contact">
-  <h2>Contact</h2>
-  <p>
-    We’d love to hear from you!  
-    Please send us an email if you have any inquiries, suggestions, or recommendations.  
-  </p>
-  <p>
-    📧 <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>
-  </p>
-</section>
+    </section>
 
+    <!-- ===================== PromptForge ===================== -->
+    <section id="promptforge">
+      <h2>🔥 PromptForge</h2>
+      <p class="subtext">Craft, share, and explore the best AI prompts for innovation and streamlined workflows.</p>
+
+      <!-- Submit Prompt (emails to you for now, since GitHub Pages is static) -->
+      <article class="card">
+        <h3>Submit Your Prompt</h3>
+        <form class="pf" id="pf-form">
+          <div class="row">
+            <div>
+              <label for="pf-name">Your Name (optional)</label>
+              <input type="text" id="pf-name" name="name" placeholder="e.g., Alex J." />
+            </div>
+            <div>
+              <label for="pf-category">Category/Tag</label>
+              <input type="text" id="pf-category" name="category" placeholder="e.g., Contracting, Productivity" />
+            </div>
+          </div>
+          <div>
+            <label for="pf-title">Prompt Title <span aria-hidden="true" style="color:#ef4444">*</span></label>
+            <input type="text" id="pf-title" name="title" placeholder="e.g., Streamline Contract Review" required />
+          </div>
+          <div>
+            <label for="pf-text">Your Prompt <span aria-hidden="true" style="color:#ef4444">*</span></label>
+            <textarea id="pf-text" name="prompt" rows="6" placeholder="Write the exact prompt you'd like to share…" required></textarea>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Send via Email</button>
+            <button type="button" class="btn light" id="pf-clear">Clear</button>
+          </div>
+          <p class="subtext">Note: submissions are emailed to <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>. We’ll review and add highlights to the gallery below.</p>
+        </form>
+      </article>
+
+      <!-- Prompt Gallery (examples; add more by duplicating a card) -->
+      <div class="pf-grid">
+        <article class="card">
+          <span class="tag">Contracting</span>
+          <h3>Streamline Contract Review</h3>
+          <p class="snippet">“Summarize the key clauses of this contract and highlight potential risks, required actions, and missing references to FAR/DFARS…”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Summarize the key clauses of this contract and highlight potential risks, required actions, and missing references to FAR/DFARS. Return a bullet summary with clause numbers and a short risk note.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Productivity</span>
+          <h3>AI for Daily Standups</h3>
+          <p class="snippet">“Generate a concise daily standup report based on this project update, grouped by Yesterday/Today/Risks, and flag blockers…”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Generate a concise daily standup report from the text I provide. Group by Yesterday/Today/Risks, use bullet points, and end with 3 suggested next actions.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Learning</span>
+          <h3>Rapid Study Coach</h3>
+          <p class="snippet">“Teach me the basics of [topic] in 10 flashcards. After each, quiz me with one multiple-choice question…”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Act as a tutor. Teach me the basics of TOPIC in 10 flashcards. After each card, ask one MCQ with 4 options and wait for my answer before continuing.">Copy Prompt</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===================== Contact ===================== -->
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>
+        We’d love to hear from you!
+        Please send us an email if you have any inquiries, suggestions, or recommendations.
+      </p>
+      <p>
+        📧 <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>
+      </p>
+    </section>
   </main>
+
   <footer>
     <div class="container">© <span id="year"></span> Contracting Arsenal</div>
   </footer>
+
   <script>
+    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Copy buttons
+    document.querySelectorAll('.btn.copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-copy') || '';
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = 'Copied!';
+          setTimeout(() => btn.textContent = 'Copy Prompt', 1200);
+        });
+      });
+    });
+
+    // Submit via email (mailto:)
+    const pfForm = document.getElementById('pf-form');
+    const pfClear = document.getElementById('pf-clear');
+    pfForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('pf-name').value.trim();
+      const title = document.getElementById('pf-title').value.trim();
+      const prompt = document.getElementById('pf-text').value.trim();
+      const cat = document.getElementById('pf-category').value.trim();
+
+      if(!title || !prompt){
+        alert('Please fill in the Prompt Title and the Prompt text.');
+        return;
+      }
+
+      const subject = encodeURIComponent('PromptForge submission: ' + title);
+      const bodyLines = [
+        'Title: ' + title,
+        'Category: ' + (cat || '(not specified)'),
+        'Name: ' + (name || '(anonymous)'),
+        '',
+        'Prompt:',
+        prompt
+      ];
+      const body = encodeURIComponent(bodyLines.join('\n'));
+      const mailto = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
+      window.location.href = mailto;
+    });
+
+    pfClear.addEventListener('click', () => {
+      pfForm.reset();
+    });
   </script>
 </body>
 </html>
