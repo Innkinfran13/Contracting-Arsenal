@@ -14,6 +14,12 @@
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
     .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid #d1d5db; background:#fff; color:#111827; cursor:pointer; text-decoration:none; }
     .btn.copy { background:#0ea5e9; border-color:#0ea5e9; color:#001018; font-weight:700; }
+    form.pf { display:grid; gap:10px; max-width:720px; margin:auto; }
+    form.pf input, form.pf textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; }
+    form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
+    .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
   </style>
 </head>
 <body>
@@ -81,7 +87,66 @@
     <section id="promptforge">
       <h2>🔥 PromptForge</h2>
       <p class="subtext">Craft, share, and explore the best AI prompts for innovation and streamlined workflows.</p>
-      <!-- (keep your PromptForge form + gallery here) -->
+
+      <!-- Submit Prompt -->
+      <article class="card">
+        <h3>Submit Your Prompt</h3>
+        <form class="pf" id="pf-form">
+          <div class="row">
+            <div>
+              <label for="pf-name">Your Name (optional)</label>
+              <input type="text" id="pf-name" name="name" placeholder="e.g., Alex J." />
+            </div>
+            <div>
+              <label for="pf-category">Category/Tag</label>
+              <input type="text" id="pf-category" name="category" placeholder="e.g., Contracting, Productivity" />
+            </div>
+          </div>
+          <div>
+            <label for="pf-title">Prompt Title <span aria-hidden="true" style="color:#ef4444">*</span></label>
+            <input type="text" id="pf-title" name="title" placeholder="e.g., Streamline Contract Review" required />
+          </div>
+          <div>
+            <label for="pf-text">Your Prompt <span aria-hidden="true" style="color:#ef4444">*</span></label>
+            <textarea id="pf-text" name="prompt" rows="6" placeholder="Write the exact prompt you'd like to share…" required></textarea>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Send via Email</button>
+            <button type="button" class="btn" id="pf-clear">Clear</button>
+          </div>
+          <p class="subtext">Note: submissions are emailed to <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>.</p>
+        </form>
+      </article>
+
+      <!-- Prompt Gallery -->
+      <div class="pf-grid">
+        <article class="card">
+          <span class="tag">Contracting</span>
+          <h3>Streamline Contract Review</h3>
+          <p class="snippet">“Summarize the key clauses of this contract and highlight potential risks, required actions, and missing references to FAR/DFARS…”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Summarize the key clauses of this contract and highlight potential risks, required actions, and missing references to FAR/DFARS. Return a bullet summary with clause numbers and a short risk note.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Productivity</span>
+          <h3>AI for Daily Standups</h3>
+          <p class="snippet">“Generate a concise daily standup report based on this project update, grouped by Yesterday/Today/Risks, and flag blockers…”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Generate a concise daily standup report from the text I provide. Group by Yesterday/Today/Risks, use bullet points, and end with 3 suggested next actions.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Learning</span>
+          <h3>Rapid Study Coach</h3>
+          <p class="snippet">“Teach me the basics of [topic] in 10 flashcards. After each, quiz me with one multiple-choice question…”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Act as a tutor. Teach me the basics of TOPIC in 10 flashcards. After each card, ask one MCQ with 4 options and wait for my answer before continuing.">Copy Prompt</button>
+          </div>
+        </article>
+      </div>
     </section>
 
     <!-- ===================== Contact Us ===================== -->
@@ -99,7 +164,52 @@
   </footer>
 
   <script>
+    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Copy buttons
+    document.querySelectorAll('.btn.copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-copy') || '';
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = 'Copied!';
+          setTimeout(() => btn.textContent = 'Copy Prompt', 1200);
+        });
+      });
+    });
+
+    // Submit via email
+    const pfForm = document.getElementById('pf-form');
+    const pfClear = document.getElementById('pf-clear');
+    pfForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('pf-name').value.trim();
+      const title = document.getElementById('pf-title').value.trim();
+      const prompt = document.getElementById('pf-text').value.trim();
+      const cat = document.getElementById('pf-category').value.trim();
+
+      if(!title || !prompt){
+        alert('Please fill in the Prompt Title and the Prompt text.');
+        return;
+      }
+
+      const subject = encodeURIComponent('PromptForge submission: ' + title);
+      const bodyLines = [
+        'Title: ' + title,
+        'Category: ' + (cat || '(not specified)'),
+        'Name: ' + (name || '(anonymous)'),
+        '',
+        'Prompt:',
+        prompt
+      ];
+      const body = encodeURIComponent(bodyLines.join('\n'));
+      const mailto = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
+      window.location.href = mailto;
+    });
+
+    pfClear.addEventListener('click', () => {
+      pfForm.reset();
+    });
   </script>
 </body>
 </html>
