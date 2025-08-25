@@ -9,10 +9,8 @@
   <style>
     h2 { text-align: center; }
     .subtext { color:#6b7280; margin: 6px 0 16px; text-align:center; }
-    header h1 { font-size:clamp(32px,6vw,56px); font-weight:900; margin:0; }
-    nav.quick { margin-top: 12px; font-size: .95rem; text-align:center; }
+    nav.quick { margin-top: 8px; font-size: .95rem; text-align:center; }
     nav.quick a { margin:0 12px; text-decoration: none; color: #2563eb; }
-    .emoji { font-size:1.2em; vertical-align:middle; margin-right:4px; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
     .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid #d1d5db; background:#fff; color:#111827; cursor:pointer; text-decoration:none; }
     .btn.copy { background:#0ea5e9; border-color:#0ea5e9; color:#001018; font-weight:700; }
@@ -27,12 +25,11 @@
 <body>
   <header>
     <div class="container" style="text-align:center;">
-      <h1>🛡️ Contracting Arsenal 🛡️</h1>
+      <h1 style="font-size:clamp(32px,6vw,56px); font-weight:900;">Contracting Arsenal</h1>
       <nav class="quick">
-        <a href="#knowledge-stockpile"><span class="emoji">📚</span>Knowledge Stockpile</a>
-        <a href="#promptforge"><span class="emoji">🔥</span>PromptForge</a>
-        <a href="#work-smarter-hub"><span class="emoji">🧠</span>Work Smarter Hub</a>
-        <a href="#contact"><span class="emoji">📬</span>Contact Us</a>
+        <a href="#knowledge-stockpile">📚 Knowledge Stockpile</a>
+        <a href="#promptforge">🔥 PromptForge</a>
+        <a href="#work-smarter-hub">🧠 Work Smarter Hub</a>
       </nav>
     </div>
   </header>
@@ -44,7 +41,7 @@
       <p class="subtext">Collection of contracting tools, templates, study materials, and resources available to everyone.</p>
 
       <div class="cards">
-        <!-- Example -->
+        <!-- Professional Certification Quiz -->
         <article class="card">
           <h3>Professional Contracting Certification Quiz</h3>
           <p>A browser-based quiz to practice and review contracting knowledge.</p>
@@ -53,7 +50,36 @@
             <a class="btn" href="Professional%20Cert%20Contracting%20Quiz%20final.html" download>Download</a>
           </div>
         </article>
-        <!-- (other cards unchanged) -->
+
+        <!-- FAR Parts Quiz -->
+        <article class="card">
+          <h3>FAR Parts Quiz</h3>
+          <p>Interactive quiz covering FAR Parts 1–52. Great for practice.</p>
+          <div class="actions">
+            <a class="btn" href="FAR%20parts%20quiz.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn" href="FAR%20parts%20quiz.html" download>Download</a>
+          </div>
+        </article>
+
+        <!-- Supply Under SAT KO Checklist -->
+        <article class="card">
+          <h3>Supply Under SAT KO Checklist</h3>
+          <p>Quick checklist for supply actions under the Simplified Acquisition Threshold.</p>
+          <div class="actions">
+            <a class="btn" href="supply-under-sat-ko-checklist.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn" href="supply-under-sat-ko-checklist.html" download>Download</a>
+          </div>
+        </article>
+
+        <!-- CORB Level 1 – Team Reviewer -->
+        <article class="card">
+          <h3>CORB Level 1 – Team Reviewer</h3>
+          <p>Spin-the-wheel group game for interactive learning and collaboration.</p>
+          <div class="actions">
+            <a class="btn" href="corb-level-1-team-reviewer.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn" href="corb-level-1-team-reviewer.html" download>Download</a>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -61,7 +87,92 @@
     <section id="promptforge">
       <h2>🔥 PromptForge 🔥</h2>
       <p class="subtext">Craft, share, and explore the best AI prompts for innovation and streamlined workflows.</p>
-      <!-- (form + gallery remain the same, Copy Prompt buttons already in place) -->
+
+      <!-- Submit Prompt -->
+      <article class="card">
+        <h3>Submit Your Prompt</h3>
+        <form class="pf" id="pf-form">
+          <div class="row">
+            <div>
+              <label for="pf-name">Your Name (optional)</label>
+              <input type="text" id="pf-name" name="name" placeholder="e.g., Elysia F." />
+            </div>
+            <div>
+              <label for="pf-category">Category/Tag</label>
+              <input type="text" id="pf-category" name="category" placeholder="e.g., Productivity, Contracting, Learning" />
+            </div>
+          </div>
+          <div>
+            <label for="pf-title">Prompt Title <span aria-hidden="true" style="color:#ef4444">*</span></label>
+            <input type="text" id="pf-title" name="title" placeholder="e.g., Create MS PowerPoint Slides using VBA script" required />
+          </div>
+          <div>
+            <label for="pf-text">Your Prompt <span aria-hidden="true" style="color:#ef4444">*</span></label>
+            <textarea id="pf-text" name="prompt" rows="6" placeholder="Write the exact prompt you'd like to share…" required></textarea>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Send via Email</button>
+            <button type="button" class="btn" id="pf-clear">Clear</button>
+          </div>
+          <p class="subtext">Note: submissions are emailed to <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>.</p>
+        </form>
+      </article>
+
+      <!-- Prompt Gallery -->
+      <div class="pf-grid">
+        <article class="card">
+          <span class="tag">Productivity</span>
+          <h3>Create MS PowerPoint Slides using VBA script</h3>
+          <p class="snippet">“Create a MS PowerPoint slide presentation that explains key aspect of FAR part 13 using VBA script and process steps...”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Create a MS PowerPoint presentation slide that explains the key aspects of FAR Part 13 (Simplified Acquisition Procedures) using a VBA script. The goal is to automate the slide creation process, making it easy to replicate and modify. This guide is for someone with no prior experience in VBA">Copy Prompt</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Contracting</span>
+          <h3>Acquisition Draft Strategy</h3>
+          <p class="snippet">“Draft an Acquisition Strategy for a service contract under $10M. Include market research summary, contract type rationale…”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Draft an Acquisition Strategy for a service contract under $10M. Include market research summary, contract type rationale, competition approach, and risk considerations. Tailor to DoD context.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Learning</span>
+          <h3>FAR Flashcards in MS PowerPoint with VBA</h3>
+          <p class="snippet">“I am a Contracting Officer learning FAR and I want to build flashcards in MS PowerPoint using VBA…”</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="I am a Contracting Officer learning FAR and I want to build flashcards in Microsoft PowerPoint using VBA, but I have never used VBA before. Please give me step-by-step instructions as if I am a beginner.
+
+My requirements:
+
+Create 20 flashcards based on FAR Part 12 (Acquisition of Commercial Products and Services).
+
+Each slide should have:
+
+A Question on the front (Slide 1, 3, 5, etc.).
+
+The Answer with FAR reference on the next slide (Slide 2, 4, 6, etc.).
+
+Provide the exact VBA code I can copy and paste into PowerPoint’s VBA editor.
+
+Show me exactly how to:
+
+Open the VBA editor.
+
+Insert a new module.
+
+Paste the code.
+
+Run the macro.
+
+After running the macro, I should have a new PowerPoint presentation with all 20 flashcards.
+
+Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy Prompt</button>
+          </div>
+        </article>
+      </div>
     </section>
 
     <!-- ===================== Work Smarter Hub ===================== -->
@@ -69,14 +180,14 @@
       <h2>🧠 Work Smarter Hub 🧠</h2>
       <p class="subtext">Contribute and explore office ideas that streamline tasks, strengthen teamwork, and enhance efficiency.</p>
 
-      <!-- Submit -->
+      <!-- Submit your Innovative Ideas -->
       <article class="card">
         <h3>Submit Your Innovative Ideas</h3>
         <form class="pf" id="wsh-form">
           <div class="row">
             <div>
               <label for="wsh-title">Idea Title <span aria-hidden="true" style="color:#ef4444">*</span></label>
-              <input type="text" id="wsh-title" required />
+              <input type="text" id="wsh-title" placeholder="e.g., 10‑minute Weekly Intake Review" required />
             </div>
             <div>
               <label for="wsh-category">Category/Tag</label>
@@ -85,13 +196,17 @@
           </div>
           <div>
             <label for="wsh-text">Describe the idea <span aria-hidden="true" style="color:#ef4444">*</span></label>
-            <textarea id="wsh-text" rows="6" required></textarea>
+            <textarea id="wsh-text" rows="6" placeholder="What problem does it solve? Steps? Tools? Expected impact?" required></textarea>
+          </div>
+          <div>
+            <label for="wsh-name">Your Name (optional)</label>
+            <input type="text" id="wsh-name" placeholder="e.g., Alex J." />
           </div>
           <div class="actions">
             <button type="submit" class="btn">Send via Email</button>
             <button type="button" class="btn" id="wsh-clear">Clear</button>
           </div>
-          <p class="subtext">For now, submissions are emailed to <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>.</p>
+          <p class="subtext">For now, submissions are emailed to <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>. We’ll review and feature highlights here.</p>
         </form>
       </article>
 
@@ -99,28 +214,28 @@
       <div class="pf-grid">
         <article class="card">
           <span class="tag">Productivity</span>
-          <h3>Daily Two-Minute Triage</h3>
-          <p class="snippet">Quick inbox and task scan: delete, delegate, do, or defer.</p>
+          <h3>Daily Two‑Minute Triage</h3>
+          <p class="snippet">Start each morning with a quick inbox and tasks triage: delete, delegate, do, defer.</p>
           <div class="actions">
-            <button class="btn copy" data-copy="Daily Two-Minute Triage: Each morning, scan inbox and tasks. Apply 4D rule: Delete, Delegate, Do (<2 minutes), or Defer.">Copy Prompt</button>
+            <button class="btn copy" data-copy="Daily Two‑Minute Triage: Each morning, scan inbox and task list. For each item apply 4D rule—Delete, Delegate, Do (if <2 minutes), or Defer. Capture deferred items on a visible board with due dates.">Copy Idea</button>
           </div>
         </article>
 
         <article class="card">
           <span class="tag">Contracting</span>
-          <h3>One-Page Pre-Award Gate</h3>
-          <p class="snippet">Checklist confirming clauses, references, attachments, dates, and FAR/DFARS hygiene before release.</p>
+          <h3>One‑Page Pre‑Award Gate</h3>
+          <p class="snippet">A single checklist to confirm clauses, references, attachments, dates, and FAR/DFARS hygiene before release.</p>
           <div class="actions">
-            <button class="btn copy" data-copy="One-Page Pre-Award Gate: Before release, verify clauses, SOW/PWS references, attachment names, schedule dates, and FAR/DFARS cite hygiene. Keep to one page for speed.">Copy Prompt</button>
+            <button class="btn copy" data-copy="One‑Page Pre‑Award Gate: Before solicitation release, verify clause list, SOW/PWS references, attachment names, schedule dates/time zones, and FAR/DFARS cite hygiene. Keep it to one page for speed.">Copy Idea</button>
           </div>
         </article>
 
         <article class="card">
           <span class="tag">Learning</span>
-          <h3>10-Minute FAR Drill</h3>
-          <p class="snippet">Pick one FAR part daily; write two flashcards and one quiz question.</p>
+          <h3>10‑Minute FAR Drill</h3>
+          <p class="snippet">Pick one FAR part daily; write two flashcards and one MCQ to cement knowledge.</p>
           <div class="actions">
-            <button class="btn copy" data-copy="10-Minute FAR Drill: Choose one FAR part each day. Write two Q/A flashcards and one MCQ with citation.">Copy Prompt</button>
+            <button class="btn copy" data-copy="10‑Minute FAR Drill: Choose one FAR part each day. Create two flashcards (Q/A with citation) and one MCQ. Review on Friday. Builds cumulative mastery with minimal time.">Copy Idea</button>
           </div>
         </article>
       </div>
@@ -144,18 +259,51 @@
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Copy buttons
+    // Copy buttons (PromptForge + Work Smarter Hub)
     document.querySelectorAll('.btn.copy').forEach(btn => {
       btn.addEventListener('click', () => {
         const text = btn.getAttribute('data-copy') || '';
         navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent;
           btn.textContent = 'Copied!';
-          setTimeout(() => btn.textContent = 'Copy Prompt', 1200);
+          setTimeout(() => btn.textContent = original.includes('Prompt') ? 'Copy Prompt' : 'Copy Idea', 1200);
         });
       });
     });
 
-    // Submit forms (unchanged logic; email send)
+    // Submit via email (PromptForge)
+    const pfForm = document.getElementById('pf-form');
+    const pfClear = document.getElementById('pf-clear');
+    if (pfForm) {
+      pfForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('pf-name').value.trim();
+        const title = document.getElementById('pf-title').value.trim();
+        const prompt = document.getElementById('pf-text').value.trim();
+        const cat = document.getElementById('pf-category').value.trim();
+
+        if(!title || !prompt){
+          alert('Please fill in the Prompt Title and the Prompt text.');
+          return;
+        }
+
+        const subject = encodeURIComponent('PromptForge submission: ' + title);
+        const bodyLines = [
+          'Title: ' + title,
+          'Category: ' + (cat || '(not specified)'),
+          'Name: ' + (name || '(anonymous)'),
+          '',
+          'Prompt:',
+          prompt
+        ];
+        const body = encodeURIComponent(bodyLines.join('\n'));
+        const mailto = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
+        window.location.href = mailto;
+      });
+      pfClear?.addEventListener('click', () => pfForm.reset());
+    }
+
+    // Submit via email (Work Smarter Hub)
     const wshForm = document.getElementById('wsh-form');
     const wshClear = document.getElementById('wsh-clear');
     if (wshForm) {
@@ -164,9 +312,10 @@
         const title = document.getElementById('wsh-title').value.trim();
         const cat = document.getElementById('wsh-category').value.trim();
         const text = document.getElementById('wsh-text').value.trim();
+        const name = document.getElementById('wsh-name').value.trim();
 
         if(!title || !text){
-          alert('Please fill in Title and Description.');
+          alert('Please fill in the Idea Title and description.');
           return;
         }
 
@@ -174,13 +323,14 @@
         const body = encodeURIComponent([
           'Title: ' + title,
           'Category: ' + (cat || '(not specified)'),
+          'Name: ' + (name || '(anonymous)'),
           '',
           'Idea:',
           text
         ].join('\n'));
         window.location.href = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
       });
-      wshClear.addEventListener('click', () => wshForm.reset());
+      wshClear?.addEventListener('click', () => wshForm.reset());
     }
   </script>
 </body>
