@@ -29,7 +29,7 @@
       <nav class="quick">
         <a href="#knowledge-stockpile">📚 Knowledge Stockpile</a>
         <a href="#promptforge">🔥 PromptForge</a>
-    
+        <a href="#work-smarter-hub">🧠 Work Smarter Hub</a>
       </nav>
     </div>
   </header>
@@ -141,7 +141,7 @@
         <article class="card">
           <span class="tag">Learning</span>
           <h3>FAR Flashcards in MS PowerPoint with VBA</h3>
-          <p class="snippet">“"I am a Contracting Officer learning FAR and I want to build flashcards in MS PowerPoint using VBA, but I have never used VBA before. Please give me step-by-step…”</p>
+          <p class="snippet">“I am a Contracting Officer learning FAR and I want to build flashcards in MS PowerPoint using VBA…”</p>
           <div class="actions">
             <button class="btn copy" data-copy="I am a Contracting Officer learning FAR and I want to build flashcards in Microsoft PowerPoint using VBA, but I have never used VBA before. Please give me step-by-step instructions as if I am a beginner.
 
@@ -175,6 +175,72 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
       </div>
     </section>
 
+    <!-- ===================== Work Smarter Hub ===================== -->
+    <section id="work-smarter-hub">
+      <h2>🧠 Work Smarter Hub 🧠</h2>
+      <p class="subtext">Contribute and explore office ideas that streamline tasks, strengthen teamwork, and enhance efficiency.</p>
+
+      <!-- Submit your Innovative Ideas -->
+      <article class="card">
+        <h3>Submit Your Innovative Ideas</h3>
+        <form class="pf" id="wsh-form">
+          <div class="row">
+            <div>
+              <label for="wsh-title">Idea Title <span aria-hidden="true" style="color:#ef4444">*</span></label>
+              <input type="text" id="wsh-title" placeholder="e.g., 10‑minute Weekly Intake Review" required />
+            </div>
+            <div>
+              <label for="wsh-category">Category/Tag</label>
+              <input type="text" id="wsh-category" placeholder="e.g., Productivity, Contracting, Learning" />
+            </div>
+          </div>
+          <div>
+            <label for="wsh-text">Describe the idea <span aria-hidden="true" style="color:#ef4444">*</span></label>
+            <textarea id="wsh-text" rows="6" placeholder="What problem does it solve? Steps? Tools? Expected impact?" required></textarea>
+          </div>
+          <div>
+            <label for="wsh-name">Your Name (optional)</label>
+            <input type="text" id="wsh-name" placeholder="e.g., Alex J." />
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn">Send via Email</button>
+            <button type="button" class="btn" id="wsh-clear">Clear</button>
+          </div>
+          <p class="subtext">For now, submissions are emailed to <a href="mailto:innkinfran@outlook.com">innkinfran@outlook.com</a>. We’ll review and feature highlights here.</p>
+        </form>
+      </article>
+
+      <!-- Example ideas -->
+      <div class="pf-grid">
+        <article class="card">
+          <span class="tag">Productivity</span>
+          <h3>Daily Two‑Minute Triage</h3>
+          <p class="snippet">Start each morning with a quick inbox and tasks triage: delete, delegate, do, defer.</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="Daily Two‑Minute Triage: Each morning, scan inbox and task list. For each item apply 4D rule—Delete, Delegate, Do (if <2 minutes), or Defer. Capture deferred items on a visible board with due dates.">Copy Idea</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Contracting</span>
+          <h3>One‑Page Pre‑Award Gate</h3>
+          <p class="snippet">A single checklist to confirm clauses, references, attachments, dates, and FAR/DFARS hygiene before release.</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="One‑Page Pre‑Award Gate: Before solicitation release, verify clause list, SOW/PWS references, attachment names, schedule dates/time zones, and FAR/DFARS cite hygiene. Keep it to one page for speed.">Copy Idea</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Learning</span>
+          <h3>10‑Minute FAR Drill</h3>
+          <p class="snippet">Pick one FAR part daily; write two flashcards and one MCQ to cement knowledge.</p>
+          <div class="actions">
+            <button class="btn copy" data-copy="10‑Minute FAR Drill: Choose one FAR part each day. Create two flashcards (Q/A with citation) and one MCQ. Review on Friday. Builds cumulative mastery with minimal time.">Copy Idea</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <!-- ===================== Contact Us ===================== -->
     <section id="contact">
       <h2>📬 Contact Us 📬</h2>
@@ -193,49 +259,79 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Copy buttons
+    // Copy buttons (PromptForge + Work Smarter Hub)
     document.querySelectorAll('.btn.copy').forEach(btn => {
       btn.addEventListener('click', () => {
         const text = btn.getAttribute('data-copy') || '';
         navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent;
           btn.textContent = 'Copied!';
-          setTimeout(() => btn.textContent = 'Copy Prompt', 1200);
+          setTimeout(() => btn.textContent = original.includes('Prompt') ? 'Copy Prompt' : 'Copy Idea', 1200);
         });
       });
     });
 
-    // Submit via email
+    // Submit via email (PromptForge)
     const pfForm = document.getElementById('pf-form');
     const pfClear = document.getElementById('pf-clear');
-    pfForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('pf-name').value.trim();
-      const title = document.getElementById('pf-title').value.trim();
-      const prompt = document.getElementById('pf-text').value.trim();
-      const cat = document.getElementById('pf-category').value.trim();
+    if (pfForm) {
+      pfForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('pf-name').value.trim();
+        const title = document.getElementById('pf-title').value.trim();
+        const prompt = document.getElementById('pf-text').value.trim();
+        const cat = document.getElementById('pf-category').value.trim();
 
-      if(!title || !prompt){
-        alert('Please fill in the Prompt Title and the Prompt text.');
-        return;
-      }
+        if(!title || !prompt){
+          alert('Please fill in the Prompt Title and the Prompt text.');
+          return;
+        }
 
-      const subject = encodeURIComponent('PromptForge submission: ' + title);
-      const bodyLines = [
-        'Title: ' + title,
-        'Category: ' + (cat || '(not specified)'),
-        'Name: ' + (name || '(anonymous)'),
-        '',
-        'Prompt:',
-        prompt
-      ];
-      const body = encodeURIComponent(bodyLines.join('\n'));
-      const mailto = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
-      window.location.href = mailto;
-    });
+        const subject = encodeURIComponent('PromptForge submission: ' + title);
+        const bodyLines = [
+          'Title: ' + title,
+          'Category: ' + (cat || '(not specified)'),
+          'Name: ' + (name || '(anonymous)'),
+          '',
+          'Prompt:',
+          prompt
+        ];
+        const body = encodeURIComponent(bodyLines.join('\n'));
+        const mailto = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
+        window.location.href = mailto;
+      });
+      pfClear?.addEventListener('click', () => pfForm.reset());
+    }
 
-    pfClear.addEventListener('click', () => {
-      pfForm.reset();
-    });
+    // Submit via email (Work Smarter Hub)
+    const wshForm = document.getElementById('wsh-form');
+    const wshClear = document.getElementById('wsh-clear');
+    if (wshForm) {
+      wshForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('wsh-title').value.trim();
+        const cat = document.getElementById('wsh-category').value.trim();
+        const text = document.getElementById('wsh-text').value.trim();
+        const name = document.getElementById('wsh-name').value.trim();
+
+        if(!title || !text){
+          alert('Please fill in the Idea Title and description.');
+          return;
+        }
+
+        const subject = encodeURIComponent('Work Smarter Hub submission: ' + title);
+        const body = encodeURIComponent([
+          'Title: ' + title,
+          'Category: ' + (cat || '(not specified)'),
+          'Name: ' + (name || '(anonymous)'),
+          '',
+          'Idea:',
+          text
+        ].join('\n'));
+        window.location.href = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
+      });
+      wshClear?.addEventListener('click', () => wshForm.reset());
+    }
   </script>
 </body>
 </html>
