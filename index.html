@@ -7,29 +7,101 @@
   <link rel="stylesheet" href="style.css" />
 
   <style>
+    /* ---- Layout & Typography helpers ---- */
     h2 { text-align: center; }
     .subtext { color:#6b7280; margin: 6px 0 16px; text-align:center; }
-    nav.quick { margin-top: 8px; font-size: .95rem; text-align:center; }
-    nav.quick a { margin:0 12px; text-decoration: none; color: #2563eb; }
+    .emoji { font-size:1.2em; vertical-align:middle; margin-right:6px; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
     .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid #d1d5db; background:#fff; color:#111827; cursor:pointer; text-decoration:none; }
     .btn.copy { background:#0ea5e9; border-color:#0ea5e9; color:#001018; font-weight:700; }
+    .btn.visit { background:#111827; color:#fff; }
+    .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
     form.pf { display:grid; gap:10px; max-width:720px; margin:auto; }
     form.pf input, form.pf textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; }
     form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
     @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
-    .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
+
+    /* ---- Sticky Header with Hamburger ---- */
+    header.site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: #ffffffcc; backdrop-filter: saturate(180%) blur(6px);
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .site-header .bar {
+      display:flex; align-items:center; justify-content:space-between;
+      max-width: 1100px; margin: 0 auto; padding: 10px 12px;
+    }
+    .brand {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900; text-align:center; margin: 6px auto 6px;
+    }
+    .brand .shield { margin: 0 .25rem; }
+    /* Hamburger button */
+    .hamburger {
+      display:none; width:42px; height:42px; border-radius:10px;
+      border:1px solid #d1d5db; background:#fff; color:#111827; cursor:pointer;
+      align-items:center; justify-content:center;
+    }
+    .hamburger .lines { position:relative; width:20px; height:2px; background:#111827; transition:transform .2s ease; }
+    .hamburger .lines::before,
+    .hamburger .lines::after {
+      content:""; position:absolute; left:0; width:20px; height:2px; background:#111827; transition: transform .2s ease, top .2s ease, opacity .2s ease;
+    }
+    .hamburger .lines::before { top:-6px; }
+    .hamburger .lines::after  { top: 6px; }
+    .hamburger[aria-expanded="true"] .lines { background: transparent; }
+    .hamburger[aria-expanded="true"] .lines::before { top:0; transform: rotate(45deg); }
+    .hamburger[aria-expanded="true"] .lines::after  { top:0; transform: rotate(-45deg); }
+
+    /* Nav links */
+    nav.quick { text-align:center; }
+    .nav-links { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; padding: 8px 0 14px; }
+    .nav-links a { text-decoration:none; color:#2563eb; }
+
+    /* Mobile collapse */
+    @media (max-width: 860px){
+      .hamburger { display:flex; }
+      .nav-wrap { overflow:hidden; max-height:0; transition:max-height .25s ease; }
+      .nav-wrap.open { max-height: 320px; }
+      .nav-links { flex-direction:column; align-items:center; gap:10px; padding: 8px 0 12px; }
+    }
+
+    /* Subtle shadow on scroll */
+    .scrolled { box-shadow: 0 6px 16px rgba(0,0,0,.05); }
+
+    /* Container width */
+    .container { width:min(1100px, 94vw); margin: 0 auto; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container" style="text-align:center;">
-      <h1 style="font-size:clamp(32px,6vw,56px); font-weight:900;">Contracting Arsenal</h1>
-      <nav class="quick">
-        <a href="#knowledge-stockpile">📚 Knowledge Stockpile</a>
-        <a href="#promptforge">🔥 PromptForge</a>
-        <a href="#work-smarter-hub">🧠 Work Smarter Hub</a>
+  <!-- ===== Header with Hamburger ===== -->
+  <header class="site-header" id="site-header">
+    <div class="bar container">
+      <!-- Left spacer (reserved for future logo) -->
+      <div style="width:42px;"></div>
+
+      <!-- Title center -->
+      <div class="brand">
+        <span class="shield">🛡️</span> Contracting Arsenal <span class="shield">🛡️</span>
+      </div>
+
+      <!-- Hamburger -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-navigation">
+        <span class="lines"></span>
+      </button>
+    </div>
+
+    <!-- Collapsible nav -->
+    <div class="nav-wrap" id="nav-wrap">
+      <nav class="quick container" id="primary-navigation">
+        <div class="nav-links">
+          <a href="#knowledge-stockpile"><span class="emoji">📚</span>Knowledge Stockpile</a>
+          <a href="#promptforge"><span class="emoji">🔥</span>PromptForge</a>
+          <a href="#work-smarter-hub"><span class="emoji">🧠</span>Work Smarter Hub</a>
+          <a href="#ai-battleground"><span class="emoji">🤖</span>AI Battleground</a>
+          <a href="#contact"><span class="emoji">📬</span>Contact Us</a>
+        </div>
       </nav>
     </div>
   </header>
@@ -187,7 +259,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <div class="row">
             <div>
               <label for="wsh-title">Idea Title <span aria-hidden="true" style="color:#ef4444">*</span></label>
-              <input type="text" id="wsh-title" placeholder="e.g., 10‑minute Weekly Intake Review" required />
+              <input type="text" id="wsh-title" placeholder="e.g., 10-minute Weekly Intake Review" required />
             </div>
             <div>
               <label for="wsh-category">Category/Tag</label>
@@ -210,35 +282,154 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
         </form>
       </article>
 
-      <!-- Example ideas -->
+      <!-- Example prompts -->
       <div class="pf-grid">
         <article class="card">
           <span class="tag">Productivity</span>
-          <h3>Daily Two‑Minute Triage</h3>
+          <h3>Daily Two-Minute Triage</h3>
           <p class="snippet">Start each morning with a quick inbox and tasks triage: delete, delegate, do, defer.</p>
           <div class="actions">
-            <button class="btn copy" data-copy="Daily Two‑Minute Triage: Each morning, scan inbox and task list. For each item apply 4D rule—Delete, Delegate, Do (if <2 minutes), or Defer. Capture deferred items on a visible board with due dates.">Copy Idea</button>
+            <button class="btn copy" data-copy="Daily Two-Minute Triage: Each morning, scan inbox and task list. For each item apply 4D rule—Delete, Delegate, Do (if <2 minutes), or Defer. Capture deferred items on a visible board with due dates.">Copy Prompt</button>
           </div>
         </article>
 
         <article class="card">
           <span class="tag">Contracting</span>
-          <h3>One‑Page Pre‑Award Gate</h3>
+          <h3>One-Page Pre-Award Gate</h3>
           <p class="snippet">A single checklist to confirm clauses, references, attachments, dates, and FAR/DFARS hygiene before release.</p>
           <div class="actions">
-            <button class="btn copy" data-copy="One‑Page Pre‑Award Gate: Before solicitation release, verify clause list, SOW/PWS references, attachment names, schedule dates/time zones, and FAR/DFARS cite hygiene. Keep it to one page for speed.">Copy Idea</button>
+            <button class="btn copy" data-copy="One-Page Pre-Award Gate: Before solicitation release, verify clause list, SOW/PWS references, attachment names, schedule dates/time zones, and FAR/DFARS cite hygiene. Keep it to one page for speed.">Copy Prompt</button>
           </div>
         </article>
 
         <article class="card">
           <span class="tag">Learning</span>
-          <h3>10‑Minute FAR Drill</h3>
+          <h3>10-Minute FAR Drill</h3>
           <p class="snippet">Pick one FAR part daily; write two flashcards and one MCQ to cement knowledge.</p>
           <div class="actions">
-            <button class="btn copy" data-copy="10‑Minute FAR Drill: Choose one FAR part each day. Create two flashcards (Q/A with citation) and one MCQ. Review on Friday. Builds cumulative mastery with minimal time.">Copy Idea</button>
+            <button class="btn copy" data-copy="10-Minute FAR Drill: Choose one FAR part each day. Create two flashcards (Q/A with citation) and one MCQ. Review on Friday. Builds cumulative mastery with minimal time.">Copy Prompt</button>
           </div>
         </article>
       </div>
+    </section>
+
+    <!-- ===================== AI Battleground ===================== -->
+    <section id="ai-battleground">
+      <h2>🤖 AI Battleground 🤖</h2>
+      <p class="subtext">Battle-test AI tools for contracting: document analysis, clause checks, research, and automation.</p>
+
+      <div class="pf-grid">
+        <!-- 1. AcqBot -->
+        <article class="card">
+          <span class="tag">Acquisition Assistant</span>
+          <h3>AcqBot</h3>
+          <p class="snippet">AI assistant for acquisition professionals: market research, document drafting, FAR/DFARS checks.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://acqbot.com/" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="Using AcqBot: Generate a market research summary for NAICS [CODE] for [PRODUCT/SERVICE]. Include top vendors, estimated pricing range, lead times, and relevant FAR/DFARS references. Output bullets and a short risk note.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 2. Advana -->
+        <article class="card">
+          <span class="tag">DoD Data Platform</span>
+          <h3>Advana</h3>
+          <p class="snippet">DoD’s enterprise data platform for analytics and dashboards across missions and acquisition.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://advana.data.mil/" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="In Advana: Build a dashboard showing spend by vendor over 3 fiscal years for NAICS [CODE]. Include trend line, top 10 vendors, and average lead time if available.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 3. AskSage -->
+        <article class="card">
+          <span class="tag">DoD Chatbot</span>
+          <h3>AskSage</h3>
+          <p class="snippet">Secure DoD chatbot answering policy and contracting questions from trusted sources.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://chat.asksage.mil/login" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="AskSage: Summarize key thresholds and competition requirements for FAR Part 13 acquisitions, with citations. Provide common pitfalls and recommended clauses to review.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 4. Authorium AuthorAI -->
+        <article class="card">
+          <span class="tag">Document Drafting</span>
+          <h3>Authorium – AuthorAI</h3>
+          <p class="snippet">Drafts and reviews acquisition documents while encouraging FAR/DFARS compliance.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://authorium.com/solution-authorai/" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="AuthorAI: Draft a Statement of Work for custodial services covering scope, performance standards, hours, materials, and QC. Include deliverables and acceptance criteria.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 5. ProcureSight -->
+        <article class="card">
+          <span class="tag">Market Intelligence</span>
+          <h3>ProcureSight</h3>
+          <p class="snippet">Vendor insights, price benchmarks, and sourcing recommendations for procurement teams.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://procuresight.com/" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="ProcureSight: Provide price benchmarks for [PRODUCT/SERVICE] in NAICS [CODE], with vendor list, historical ranges, and contract types used. Flag any seasonal price swings.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 6. Pryon (CDAO) -->
+        <article class="card">
+          <span class="tag">Knowledge AI</span>
+          <h3>Pryon (CDAO)</h3>
+          <p class="snippet">Turns unstructured docs into searchable knowledge for rapid Q&A and discovery.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://cdao.pryon.com/" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="Pryon: Index these acquisition PDFs and answer: What clauses are mandatory under FAR Part 12 for this buy, and which optional clauses should we consider? Provide references.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 7. FSCPSC -->
+        <article class="card">
+          <span class="tag">Supply Chain</span>
+          <h3>FSCPSC</h3>
+          <p class="snippet">Resources and tools focused on federal supply chain and procurement solutions.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://www.fscpsc.com/" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="Using FSCPSC resources: Identify supply chain risks for [COMMODITY]. Provide mitigation steps, alternate sources, and past performance considerations for source selection.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 8. Tradewind AI (PDF) -->
+        <article class="card">
+          <span class="tag">DoD AI Marketplace</span>
+          <h3>Tradewind AI (Whitepaper)</h3>
+          <p class="snippet">DoD marketplace for AI/ML solutions—vendors, use cases, and references.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://www.tradewindai.com/_files/ugd/2df116_23957d26c1cc4a97b784795364d62a89.pdf" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="From Tradewind AI whitepaper: Extract three relevant AI vendors for contracting workflows and summarize capabilities, deployment model, and security posture.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 9. RAI (AcqBot) -->
+        <article class="card">
+          <span class="tag">Responsible AI</span>
+          <h3>RAI – Responsible AI (AcqBot)</h3>
+          <p class="snippet">Responsible AI tooling tailored for acquisition: transparency, fairness, and compliance.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://rai.acqbot.com/" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="Responsible AI review: For this AI-assisted acquisition workflow, assess risks across bias, privacy, security, and traceability. Recommend mitigations and approvals needed.">Copy Prompt</button>
+          </div>
+        </article>
+
+        <!-- 10. TurboInnovate (CDAO) -->
+        <article class="card">
+          <span class="tag">Innovation Challenges</span>
+          <h3>TurboInnovate (CDAO)</h3>
+          <p class="snippet">Platform for crowdsourcing and rapid prototyping of acquisition solutions with AI.</p>
+          <div class="actions">
+            <a class="btn visit" href="https://cdao.turboinnovate.com/" target="_blank" rel="noopener">Visit</a>
+            <button class="btn copy" data-copy="TurboInnovate: Propose an AI prototype to auto-classify incoming requirements packages by NAICS and flag missing artifacts. Outline success metrics and pilot plan.">Copy Prompt</button>
+          </div>
+        </article>
+      </div>
+      <p class="subtext">Always verify AI outputs against FAR/DFARS and your local policy.</p>
     </section>
 
     <!-- ===================== Contact Us ===================== -->
@@ -259,14 +450,43 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Copy buttons (PromptForge + Work Smarter Hub)
+    // Sticky header shadow on scroll
+    const header = document.getElementById('site-header');
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 4);
+    document.addEventListener('scroll', onScroll, { passive: true });
+
+    // Hamburger toggle
+    const hamburger = document.getElementById('hamburger');
+    const navWrap = document.getElementById('nav-wrap');
+    function closeMenu() {
+      hamburger.setAttribute('aria-expanded', 'false');
+      navWrap.classList.remove('open');
+    }
+    function openMenu() {
+      hamburger.setAttribute('aria-expanded', 'true');
+      navWrap.classList.add('open');
+    }
+    hamburger.addEventListener('click', () => {
+      const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+      expanded ? closeMenu() : openMenu();
+    });
+    // Close menu on Esc
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+    // Close menu after clicking a nav link (mobile)
+    document.querySelectorAll('#primary-navigation a').forEach(a => {
+      a.addEventListener('click', () => closeMenu());
+    });
+
+    // Copy buttons (PromptForge + Work Smarter Hub + AI Battleground)
     document.querySelectorAll('.btn.copy').forEach(btn => {
       btn.addEventListener('click', () => {
         const text = btn.getAttribute('data-copy') || '';
         navigator.clipboard.writeText(text).then(() => {
           const original = btn.textContent;
           btn.textContent = 'Copied!';
-          setTimeout(() => btn.textContent = original.includes('Prompt') ? 'Copy Prompt' : 'Copy Idea', 1200);
+          setTimeout(() => btn.textContent = 'Copy Prompt', 1200);
         });
       });
     });
@@ -312,7 +532,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
         const title = document.getElementById('wsh-title').value.trim();
         const cat = document.getElementById('wsh-category').value.trim();
         const text = document.getElementById('wsh-text').value.trim();
-        const name = document.getElementById('wsh-name').value.trim();
+        const name = document.getElementById('wsh-name')?.value.trim() || '';
 
         if(!title || !text){
           alert('Please fill in the Idea Title and description.');
