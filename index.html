@@ -7,13 +7,19 @@
   <link rel="stylesheet" href="style.css" />
 
   <style>
+    /* ---- Global Colors ---- */
+    :root { 
+      --brand-blue:#0f172a;   /* dark blue */
+      --brand-blue-dark:#0b1220; 
+    }
+
     /* ---- Layout & Typography helpers ---- */
     h2 { text-align: center; }
     .subtext { color:#6b7280; margin: 6px 0 16px; text-align:center; }
     .emoji { font-size:1.2em; vertical-align:middle; margin-right:6px; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
-    /* Unified button styling (same blue as header/footer) */
-    :root { --brand-blue:#2563eb; --brand-blue-dark:#1e40af; }
+
+    /* Unified button styling (dark blue + white text) */
     .btn {
       display:inline-block; padding:10px 14px; border-radius:10px;
       border:1px solid var(--brand-blue); background:var(--brand-blue); color:#fff;
@@ -22,16 +28,18 @@
     }
     .btn:hover { background:var(--brand-blue-dark); border-color:var(--brand-blue-dark); }
     .btn:active { transform: translateY(1px); }
-    /* Keep “copy” class for JS hooks, but style is unified */
-    .btn.copy, .btn.visit { background:var(--brand-blue); border-color:var(--brand-blue); color:#fff; }
+
+    /* Grids and tags (PromptForge/Work Smarter Hub/AIB) */
     .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
     .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
+
+    /* Forms */
     form.pf { display:grid; gap:10px; max-width:720px; margin:auto; }
     form.pf input, form.pf textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; }
     form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
     @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
 
-    /* ---- Sticky Blue Header with Hamburger (left) ---- */
+    /* ---- Sticky Dark Blue Header with Hamburger (left) ---- */
     header.site-header {
       position: sticky; top: 0; z-index: 50;
       background: var(--brand-blue); color: #fff; border-bottom: 1px solid var(--brand-blue-dark);
@@ -45,7 +53,6 @@
       font-size: clamp(28px, 5vw, 52px);
       font-weight: 900; margin: 6px auto 6px; color:#fff;
     }
-    /* Left hamburger; right spacer keeps title centered */
     .left-slot, .right-slot { width:42px; display:flex; align-items:center; justify-content:center; }
 
     /* Hamburger button */
@@ -84,11 +91,10 @@
     /* Container width */
     .container { width:min(1100px, 94vw); margin: 0 auto; }
 
-    /* Footer styling to match header */
+    /* Footer styling with concise disclaimer */
     footer { background: var(--brand-blue); color:#fff; margin-top: 30px; }
-    footer .container { padding: 18px 0; }
-    .disclaimer { background:#f9fafb; border-top:1px solid #e5e7eb; padding:16px 0; margin-top:24px; }
-    .disclaimer .container { color:#374151; font-size:.95rem; }
+    footer .container { padding: 18px 0; font-size:.95rem; text-align:center; }
+    footer .disclaimer { font-size:.8rem; margin-top:6px; opacity:0.9; }
   </style>
 </head>
 <body>
@@ -105,7 +111,7 @@
       <!-- Center: Title -->
       <div class="brand">Contracting Arsenal</div>
 
-      <!-- Right: spacer to balance -->
+      <!-- Right: spacer -->
       <div class="right-slot"></div>
     </div>
 
@@ -299,7 +305,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
         </form>
       </article>
 
-      <!-- Example prompts -->
+      <!-- Example ideas -->
       <div class="pf-grid">
         <article class="card">
           <span class="tag">Productivity</span>
@@ -396,10 +402,10 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           </div>
         </article>
 
-        <!-- 7. FSC/PSC -->
+        <!-- 7. FSCPSC -->
         <article class="card">
           <span class="tag">Supply Chain</span>
-          <h3>FSC/PSC</h3>
+          <h3>FSCPSC</h3>
           <p class="snippet">Resources and tools focused on federal supply chain and procurement solutions.</p>
           <div class="actions">
             <a class="btn" href="https://www.fscpsc.com/" target="_blank" rel="noopener">Visit</a>
@@ -439,18 +445,6 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
       <p class="subtext">Always verify AI outputs against FAR/DFARS and your local policy.</p>
     </section>
 
-    <!-- ===================== Disclaimer ===================== -->
-    <section class="disclaimer">
-      <div class="container">
-        <h3 style="text-align:center; margin:0 0 8px;">Disclaimer</h3>
-        <p style="margin:0;">
-          The resources and AI tools listed here are provided for educational and informational purposes only.
-          Always verify outputs against FAR/DFARS, agency supplements, and local policy. Do not submit sensitive,
-          classified, or controlled information to third-party tools. Your use of external sites is subject to their terms.
-        </p>
-      </div>
-    </section>
-
     <!-- ===================== Contact Us ===================== -->
     <section id="contact">
       <h2>📬 Contact Us 📬</h2>
@@ -462,7 +456,12 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
   </main>
 
   <footer>
-    <div class="container" style="text-align:center;">© <span id="year"></span> Contracting Arsenal</div>
+    <div class="container">
+      © <span id="year"></span> Contracting Arsenal
+      <div class="disclaimer">
+        Disclaimer: For educational use only. Verify against FAR/DFARS; don’t share sensitive data.
+      </div>
+    </div>
   </footer>
 
   <script>
@@ -489,14 +488,8 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
       const expanded = hamburger.getAttribute('aria-expanded') === 'true';
       expanded ? closeMenu() : openMenu();
     });
-    // Close menu on Esc
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeMenu();
-    });
-    // Close menu after clicking a nav link (mobile)
-    document.querySelectorAll('#primary-navigation a').forEach(a => {
-      a.addEventListener('click', () => closeMenu());
-    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    document.querySelectorAll('#primary-navigation a').forEach(a => { a.addEventListener('click', () => closeMenu()); });
 
     // Copy buttons (PromptForge + Work Smarter Hub)
     document.querySelectorAll('.btn.copy').forEach(btn => {
@@ -506,7 +499,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           const original = btn.textContent;
           btn.textContent = 'Copied!';
           setTimeout(() => {
-            // Work Smarter Hub copies -> reset label to "COPY"
+            // Reset back to the correct label per section
             if (btn.classList.contains('copy-wsh')) {
               btn.textContent = 'COPY';
             } else {
