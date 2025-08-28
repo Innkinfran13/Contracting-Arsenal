@@ -12,8 +12,10 @@
     .subtext { color:#6b7280; margin: 6px 0 16px; text-align:center; }
     .emoji { font-size:1.2em; vertical-align:middle; margin-right:6px; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
-    /* Unified button styling (same blue as header/footer) */
-    :root { --brand-blue:#2563eb; --brand-blue-dark:#1e40af; }
+
+    /* Unified button/header/footer styling — Army Green theme */
+    :root { --brand-blue:#3B5323; --brand-blue-dark:#2e421c; } /* kept var names for minimal code change */
+
     .btn {
       display:inline-block; padding:10px 14px; border-radius:10px;
       border:1px solid var(--brand-blue); background:var(--brand-blue); color:#fff;
@@ -22,16 +24,17 @@
     }
     .btn:hover { background:var(--brand-blue-dark); border-color:var(--brand-blue-dark); }
     .btn:active { transform: translateY(1px); }
-    /* Keep “copy” class for JS hooks, but style is unified */
     .btn.copy, .btn.visit { background:var(--brand-blue); border-color:var(--brand-blue); color:#fff; }
+
     .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
+    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#e9f3e9; color:#1f2937; font-size:.85rem; margin-bottom:8px; } /* subtle green pill */
+
     form.pf { display:grid; gap:10px; max-width:720px; margin:auto; }
     form.pf input, form.pf textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; }
     form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
     @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
 
-    /* ---- Sticky Blue Header with Hamburger (left) ---- */
+    /* ---- Sticky Header with Hamburger (left) — Army Green ---- */
     header.site-header {
       position: sticky; top: 0; z-index: 50;
       background: var(--brand-blue); color: #fff; border-bottom: 1px solid var(--brand-blue-dark);
@@ -45,10 +48,8 @@
       font-size: clamp(28px, 5vw, 52px);
       font-weight: 900; margin: 6px auto 6px; color:#fff;
     }
-    /* Left hamburger; right spacer keeps title centered */
     .left-slot, .right-slot { width:42px; display:flex; align-items:center; justify-content:center; }
 
-    /* Hamburger button */
     .hamburger {
       width:42px; height:42px; border-radius:10px;
       border:1px solid #ffffff88; background:transparent; color:#fff; cursor:pointer;
@@ -65,26 +66,22 @@
     .hamburger[aria-expanded="true"] .lines::before { top:0; transform: rotate(45deg); }
     .hamburger[aria-expanded="true"] .lines::after  { top:0; transform: rotate(-45deg); }
 
-    /* Nav links */
     nav.quick { text-align:center; }
     .nav-links { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; padding: 8px 0 14px; }
     .nav-links a { text-decoration:none; color:#fff; }
     .nav-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-    /* Mobile collapse */
     @media (max-width: 860px){
       .nav-wrap { overflow:hidden; max-height:0; transition:max-height .25s ease; }
       .nav-wrap.open { max-height: 320px; }
       .nav-links { flex-direction:column; align-items:center; gap:10px; padding: 8px 0 12px; }
     }
 
-    /* Subtle shadow on scroll */
     .scrolled { box-shadow: 0 6px 16px rgba(0,0,0,.18); }
 
-    /* Container width */
     .container { width:min(1100px, 94vw); margin: 0 auto; }
 
-    /* Footer styling to match header */
+    /* Footer styling to match header (Army Green) */
     footer { background: var(--brand-blue); color:#fff; margin-top: 30px; }
     footer .container { padding: 18px 0; }
     .disclaimer { background:#f9fafb; border-top:1px solid #e5e7eb; padding:16px 0; margin-top:24px; }
@@ -506,7 +503,6 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           const original = btn.textContent;
           btn.textContent = 'Copied!';
           setTimeout(() => {
-            // Work Smarter Hub copies -> reset label to "COPY"
             if (btn.classList.contains('copy-wsh')) {
               btn.textContent = 'COPY';
             } else {
@@ -536,7 +532,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
         const subject = encodeURIComponent('PromptForge submission: ' + title);
         const bodyLines = [
           'Title: ' + title,
-          'Category: ' + (cat || '(not specified)'),
+          'Category: ' + (cat || '(not specified)') ,
           'Name: ' + (name || '(anonymous)'),
           '',
           'Prompt:',
