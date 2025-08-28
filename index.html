@@ -12,26 +12,28 @@
     .subtext { color:#6b7280; margin: 6px 0 16px; text-align:center; }
     .emoji { font-size:1.2em; vertical-align:middle; margin-right:6px; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
-    /* Unified button styling (same blue as header/footer) */
-    :root { --brand-blue:#2563eb; --brand-blue-dark:#1e40af; }
+
+    /* Unified button/header/footer styling — Army Green theme */
+    :root { --brand-blue:#3B5323; --brand-blue-dark:#2e421c; }
+
     .btn {
       display:inline-block; padding:10px 14px; border-radius:10px;
-      border:1px solid var(--brand-blue); background:var(--brand-blue); color:#fff;
+      border:1px solid var(--brand-blue); background:var(--brand-blue); color:#fff !important;
       cursor:pointer; text-decoration:none; font-weight:600;
       transition: background .15s ease, border-color .15s ease, transform .05s ease;
     }
     .btn:hover { background:var(--brand-blue-dark); border-color:var(--brand-blue-dark); }
     .btn:active { transform: translateY(1px); }
-    /* Keep “copy” class for JS hooks, but style is unified */
-    .btn.copy, .btn.visit { background:var(--brand-blue); border-color:var(--brand-blue); color:#fff; }
+    .btn.copy, .btn.visit { background:var(--brand-blue); border-color:var(--brand-blue); color:#fff !important; }
+
     .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
+    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#e9f3e9; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
     form.pf { display:grid; gap:10px; max-width:720px; margin:auto; }
     form.pf input, form.pf textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; }
     form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
     @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
 
-    /* ---- Sticky Blue Header with Hamburger (left) ---- */
+    /* ---- Sticky Header with Hamburger (left) — Army Green ---- */
     header.site-header {
       position: sticky; top: 0; z-index: 50;
       background: var(--brand-blue); color: #fff; border-bottom: 1px solid var(--brand-blue-dark);
@@ -139,7 +141,6 @@
             <a class="btn" href="Professional%20Cert%20Contracting%20Quiz%20final.html" download>Download</a>
           </div>
         </article>
-
         <!-- FAR Parts Quiz -->
         <article class="card">
           <h3>FAR Parts Quiz</h3>
@@ -149,7 +150,6 @@
             <a class="btn" href="FAR%20parts%20quiz.html" download>Download</a>
           </div>
         </article>
-
         <!-- Supply Under SAT KO Checklist -->
         <article class="card">
           <h3>Supply Under SAT KO Checklist</h3>
@@ -159,7 +159,6 @@
             <a class="btn" href="supply-under-sat-ko-checklist.html" download>Download</a>
           </div>
         </article>
-
         <!-- CORB Level 1 – Team Reviewer -->
         <article class="card">
           <h3>CORB Level 1 – Team Reviewer</h3>
@@ -306,7 +305,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>Daily Two-Minute Triage</h3>
           <p class="snippet">Start each morning with a quick inbox and tasks triage: delete, delegate, do, defer.</p>
           <div class="actions">
-            <button class="btn copy copy-wsh" data-copy="Daily Two-Minute Triage: Each morning, scan inbox and task list. For each item apply 4D rule—Delete, Delegate, Do (if <2 minutes), or Defer. Capture deferred items on a visible board with due dates.">COPY</button>
+            <button class="btn copy copy-wsh" data-copy="Daily Two-Minute Triage: Each morning, scan inbox and task list. For each item apply 4D rule—Delete, Delegate, Do (if <2 minutes), or Defer. Capture deferred items on a visible board with due dates.">copy</button>
           </div>
         </article>
 
@@ -315,7 +314,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>One-Page Pre-Award Gate</h3>
           <p class="snippet">A single checklist to confirm clauses, references, attachments, dates, and FAR/DFARS hygiene before release.</p>
           <div class="actions">
-            <button class="btn copy copy-wsh" data-copy="One-Page Pre-Award Gate: Before solicitation release, verify clause list, SOW/PWS references, attachment names, schedule dates/time zones, and FAR/DFARS cite hygiene. Keep it to one page for speed.">COPY</button>
+            <button class="btn copy copy-wsh" data-copy="One-Page Pre-Award Gate: Before solicitation release, verify clause list, SOW/PWS references, attachment names, schedule dates/time zones, and FAR/DFARS cite hygiene. Keep it to one page for speed.">copy</button>
           </div>
         </article>
 
@@ -324,7 +323,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>10-Minute FAR Drill</h3>
           <p class="snippet">Pick one FAR part daily; write two flashcards and one MCQ to cement knowledge.</p>
           <div class="actions">
-            <button class="btn copy copy-wsh" data-copy="10-Minute FAR Drill: Choose one FAR part each day. Create two flashcards (Q/A with citation) and one MCQ. Review on Friday. Builds cumulative mastery with minimal time.">COPY</button>
+            <button class="btn copy copy-wsh" data-copy="10-Minute FAR Drill: Choose one FAR part each day. Create two flashcards (Q/A with citation) and one MCQ. Review on Friday. Builds cumulative mastery with minimal time.">copy</button>
           </div>
         </article>
       </div>
@@ -506,9 +505,9 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           const original = btn.textContent;
           btn.textContent = 'Copied!';
           setTimeout(() => {
-            // Work Smarter Hub copies -> reset label to "COPY"
+            // Work Smarter Hub copies -> reset label to "copy"
             if (btn.classList.contains('copy-wsh')) {
-              btn.textContent = 'COPY';
+              btn.textContent = 'copy';
             } else {
               btn.textContent = 'Copy Prompt';
             }
