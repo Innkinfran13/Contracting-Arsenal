@@ -12,9 +12,18 @@
     .subtext { color:#6b7280; margin: 6px 0 16px; text-align:center; }
     .emoji { font-size:1.2em; vertical-align:middle; margin-right:6px; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
-    .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid #d1d5db; background:#fff; color:#111827; cursor:pointer; text-decoration:none; }
-    .btn.copy { background:#0ea5e9; border-color:#0ea5e9; color:#001018; font-weight:700; }
-    .btn.visit { background:#111827; color:#fff; }
+    /* Unified button styling (same blue as header/footer) */
+    :root { --brand-blue:#2563eb; --brand-blue-dark:#1e40af; }
+    .btn {
+      display:inline-block; padding:10px 14px; border-radius:10px;
+      border:1px solid var(--brand-blue); background:var(--brand-blue); color:#fff;
+      cursor:pointer; text-decoration:none; font-weight:600;
+      transition: background .15s ease, border-color .15s ease, transform .05s ease;
+    }
+    .btn:hover { background:var(--brand-blue-dark); border-color:var(--brand-blue-dark); }
+    .btn:active { transform: translateY(1px); }
+    /* Keep “copy” class for JS hooks, but style is unified */
+    .btn.copy, .btn.visit { background:var(--brand-blue); border-color:var(--brand-blue); color:#fff; }
     .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
     .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
     form.pf { display:grid; gap:10px; max-width:720px; margin:auto; }
@@ -22,27 +31,28 @@
     form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
     @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
 
-    /* ---- Sticky Blue Header with Hamburger ---- */
+    /* ---- Sticky Blue Header with Hamburger (left) ---- */
     header.site-header {
       position: sticky; top: 0; z-index: 50;
-      background: #2563eb; /* BLUE header restored */
-      color: #fff;
-      border-bottom: 1px solid #1e40af;
+      background: var(--brand-blue); color: #fff; border-bottom: 1px solid var(--brand-blue-dark);
     }
     .site-header .bar {
       display:flex; align-items:center; justify-content:space-between;
       max-width: 1100px; margin: 0 auto; padding: 10px 12px;
     }
     .brand {
+      flex: 1 1 auto; text-align:center;
       font-size: clamp(28px, 5vw, 52px);
-      font-weight: 900; text-align:center; margin: 6px auto 6px;
-      color:#fff; /* ensure title is visible on blue */
+      font-weight: 900; margin: 6px auto 6px; color:#fff;
     }
+    /* Left hamburger; right spacer keeps title centered */
+    .left-slot, .right-slot { width:42px; display:flex; align-items:center; justify-content:center; }
+
     /* Hamburger button */
     .hamburger {
-      display:none; width:42px; height:42px; border-radius:10px;
+      width:42px; height:42px; border-radius:10px;
       border:1px solid #ffffff88; background:transparent; color:#fff; cursor:pointer;
-      align-items:center; justify-content:center;
+      align-items:center; justify-content:center; display:flex;
     }
     .hamburger .lines { position:relative; width:20px; height:2px; background:#fff; transition:transform .2s ease; }
     .hamburger .lines::before,
@@ -58,12 +68,11 @@
     /* Nav links */
     nav.quick { text-align:center; }
     .nav-links { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; padding: 8px 0 14px; }
-    .nav-links a { text-decoration:none; color:#fff; } /* white links on blue header */
+    .nav-links a { text-decoration:none; color:#fff; }
     .nav-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
     /* Mobile collapse */
     @media (max-width: 860px){
-      .hamburger { display:flex; }
       .nav-wrap { overflow:hidden; max-height:0; transition:max-height .25s ease; }
       .nav-wrap.open { max-height: 320px; }
       .nav-links { flex-direction:column; align-items:center; gap:10px; padding: 8px 0 12px; }
@@ -74,22 +83,30 @@
 
     /* Container width */
     .container { width:min(1100px, 94vw); margin: 0 auto; }
+
+    /* Footer styling to match header */
+    footer { background: var(--brand-blue); color:#fff; margin-top: 30px; }
+    footer .container { padding: 18px 0; }
+    .disclaimer { background:#f9fafb; border-top:1px solid #e5e7eb; padding:16px 0; margin-top:24px; }
+    .disclaimer .container { color:#374151; font-size:.95rem; }
   </style>
 </head>
 <body>
-  <!-- ===== Header with Hamburger ===== -->
+  <!-- ===== Header with Hamburger (left) ===== -->
   <header class="site-header" id="site-header">
     <div class="bar container">
-      <!-- Left spacer (reserved for future logo) -->
-      <div style="width:42px;"></div>
+      <!-- Left: Hamburger -->
+      <div class="left-slot">
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-navigation">
+          <span class="lines"></span>
+        </button>
+      </div>
 
-      <!-- Title center (no shield emojis) -->
+      <!-- Center: Title -->
       <div class="brand">Contracting Arsenal</div>
 
-      <!-- Hamburger -->
-      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-navigation">
-        <span class="lines"></span>
-      </button>
+      <!-- Right: spacer to balance -->
+      <div class="right-slot"></div>
     </div>
 
     <!-- Collapsible nav -->
@@ -325,7 +342,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>AcqBot</h3>
           <p class="snippet">AI assistant for acquisition professionals: market research, document drafting, FAR/DFARS checks.</p>
           <div class="actions">
-            <a class="btn visit" href="https://acqbot.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://acqbot.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
@@ -335,7 +352,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>Advana</h3>
           <p class="snippet">DoD’s enterprise data platform for analytics and dashboards across missions and acquisition.</p>
           <div class="actions">
-            <a class="btn visit" href="https://advana.data.mil/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://advana.data.mil/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
@@ -345,7 +362,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>AskSage</h3>
           <p class="snippet">Secure DoD chatbot answering policy and contracting questions from trusted sources.</p>
           <div class="actions">
-            <a class="btn visit" href="https://chat.asksage.mil/login" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://chat.asksage.mil/login" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
@@ -355,7 +372,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>Authorium – AuthorAI</h3>
           <p class="snippet">Drafts and reviews acquisition documents while encouraging FAR/DFARS compliance.</p>
           <div class="actions">
-            <a class="btn visit" href="https://authorium.com/solution-authorai/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://authorium.com/solution-authorai/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
@@ -365,7 +382,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>ProcureSight</h3>
           <p class="snippet">Vendor insights, price benchmarks, and sourcing recommendations for procurement teams.</p>
           <div class="actions">
-            <a class="btn visit" href="https://procuresight.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://procuresight.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
@@ -375,17 +392,17 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>Pryon (CDAO)</h3>
           <p class="snippet">Turns unstructured docs into searchable knowledge for rapid Q&A and discovery.</p>
           <div class="actions">
-            <a class="btn visit" href="https://cdao.pryon.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://cdao.pryon.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
         <!-- 7. FSC/PSC -->
         <article class="card">
           <span class="tag">Supply Chain</span>
-          <h3>FSCPSC</h3>
+          <h3>FSC/PSC</h3>
           <p class="snippet">Resources and tools focused on federal supply chain and procurement solutions.</p>
           <div class="actions">
-            <a class="btn visit" href="https://www.fscpsc.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://www.fscpsc.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
@@ -395,7 +412,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>Tradewind AI (Whitepaper)</h3>
           <p class="snippet">DoD marketplace for AI/ML solutions—vendors, use cases, and references.</p>
           <div class="actions">
-            <a class="btn visit" href="https://www.tradewindai.com/_files/ugd/2df116_23957d26c1cc4a97b784795364d62a89.pdf" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://www.tradewindai.com/_files/ugd/2df116_23957d26c1cc4a97b784795364d62a89.pdf" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
@@ -405,7 +422,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>RAI – Responsible AI (AcqBot)</h3>
           <p class="snippet">Responsible AI tooling tailored for acquisition: transparency, fairness, and compliance.</p>
           <div class="actions">
-            <a class="btn visit" href="https://rai.acqbot.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://rai.acqbot.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
@@ -415,11 +432,23 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           <h3>TurboInnovate (CDAO)</h3>
           <p class="snippet">Platform for crowdsourcing and rapid prototyping of acquisition solutions with AI.</p>
           <div class="actions">
-            <a class="btn visit" href="https://cdao.turboinnovate.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn" href="https://cdao.turboinnovate.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
       </div>
       <p class="subtext">Always verify AI outputs against FAR/DFARS and your local policy.</p>
+    </section>
+
+    <!-- ===================== Disclaimer ===================== -->
+    <section class="disclaimer">
+      <div class="container">
+        <h3 style="text-align:center; margin:0 0 8px;">Disclaimer</h3>
+        <p style="margin:0;">
+          The resources and AI tools listed here are provided for educational and informational purposes only.
+          Always verify outputs against FAR/DFARS, agency supplements, and local policy. Do not submit sensitive,
+          classified, or controlled information to third-party tools. Your use of external sites is subject to their terms.
+        </p>
+      </div>
     </section>
 
     <!-- ===================== Contact Us ===================== -->
@@ -477,7 +506,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           const original = btn.textContent;
           btn.textContent = 'Copied!';
           setTimeout(() => {
-            // for Work Smarter Hub copies -> reset label to "COPY"
+            // Work Smarter Hub copies -> reset label to "COPY"
             if (btn.classList.contains('copy-wsh')) {
               btn.textContent = 'COPY';
             } else {
