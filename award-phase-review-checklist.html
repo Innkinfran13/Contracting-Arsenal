@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Award Phase Review Checklist</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #11182b;
+      --text: #e8eefc;
+      --muted: #a8b3cf;
+      --border: #23314f;
+      --accent: #3b82f6;
+      --accent-2: #22c55e;
+      --table-even: #0e1530;
+      --ref: #9aa7c4;
+    }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-2: #16a34a;
+      --table-even: #f1f5f9;
+      --ref: #64748b;
+    }
+
+    html, body {
+      margin: 0; padding: 0; background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-size: 13.5px;
+    }
+
+    .container { max-width: 1200px; margin: 24px auto; padding: 0 12px 32px; }
+
+    header {
+      background: linear-gradient(180deg, var(--panel), transparent);
+      border: 1px solid var(--border); border-radius: 14px; padding: 16px;
+      position: sticky; top: 0; z-index: 50; backdrop-filter: blur(6px); margin-bottom: 14px;
+    }
+    h1 { font-size: clamp(1.05rem, 1.2rem + 0.5vw, 1.6rem); margin: 0 0 2px; }
+    .sub { color: var(--muted); margin: 0; font-size: 0.9rem; }
+
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .btn {
+      background: var(--panel); color: var(--text); border: 1px solid var(--border);
+      padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600;
+      transition: transform .05s ease, background .2s ease, border-color .2s ease; font-size: 12.5px;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.success { background: var(--accent-2); border-color: var(--accent-2); color: #03140a; }
+    .btn.ghost { background: transparent; }
+
+    .card { background: var(--panel); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px; margin-top: 14px; }
+
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
+    .field label { color: var(--muted); font-size: 0.8rem; display: block; margin-bottom: 4px; text-align: left; }
+    .field input, .field textarea {
+      width: 80%; background: transparent; color: var(--text);
+      border: 2px solid var(--border); border-radius: 8px; padding: 6px 8px;
+      outline: none; text-align: left; font-size: 13px;
+    }
+    .field textarea { min-height: 40px; resize: vertical; }
+
+    /* Table */
+    table { width: 100%; border-collapse: separate; border-spacing: 6px; }
+    th, td { border: 1px solid var(--border); padding: 6px 8px; vertical-align: top; border-radius: 8px; }
+    th { background: var(--panel); position: sticky; top: 110px; z-index: 40; }
+    thead th { font-size: 12.5px; }
+    tbody tr:nth-child(even) td { background: var(--table-even); }
+
+    .num { width: 44px; text-align: center; font-weight: 700; white-space: nowrap; }
+    td.desc { font-size: 0.98rem; line-height: 1.3; }
+    td.ref, th.ref { color: var(--ref); font-size: .8rem; width: 220px; }
+    .ynna { width: 54px; text-align: center; padding: 4px 4px; }
+    .ynna input[type="checkbox"] { transform: scale(0.85); }
+
+    .section-row td { font-weight: 800; background: var(--table-even); text-align: left; }
+
+    .sign-block { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 18px; }
+    .sig { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: var(--panel); }
+    .sig h4 { margin: 10px 0 4px; font-size: 0.95rem; color: var(--muted); text-align: center; }
+    .sig .name-input { margin-bottom: 6px; text-align: center; }
+    .sig .name-input input {
+      border: 2px solid var(--border); border-radius: 8px; background: transparent;
+      width: 70%; padding: 6px; text-align: center; font-size: 13px;
+    }
+    .sig .line { border-top: 2px solid var(--border); width: 70%; margin: 18px auto 10px; }
+
+    .footnote { color: var(--muted); font-size: .9rem; margin-top: 8px; }
+
+    /* Print-only visible title */
+    .print-title {
+      display: none;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    @media print {
+      @page { size: Letter; margin: 0.5in; }
+      body { background: #fff; color: #000; font-size: 11.5px; }
+      header, .toolbar .btn.reset-only, .toolbar .btn.toggle-only { display: none !important; }
+      .container { margin: 0; padding: 0; }
+      .card { border-radius: 0; padding: 8px; margin-top: 8px; }
+      table { border-spacing: 4px; }
+      th, td { padding: 5px 6px; }
+      .num { width: 40px; }
+      td.ref, th.ref { width: 200px; font-size: 10.5px; }
+      .ynna { width: 48px; }
+      .ynna input[type="checkbox"] { transform: scale(0.8); }
+      .sig { border-radius: 0; padding: 8px; }
+      .footnote { font-size: 10.5px; }
+      .print-title { display: block; }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="container">
+
+    <!-- Print-only Title -->
+    <p class="print-title">Award Phase Review Checklist</p>
+
+    <header class="card">
+      <h1>Award Phase Review Checklist</h1>
+      <p class="sub">Evaluation and award phase verifications.</p>
+      <div class="toolbar">
+        <button class="btn toggle-only" id="toggleTheme" aria-pressed="false" title="Toggle Dark/Light">🌙 Dark Mode</button>
+        <button class="btn primary" id="printBtn" title="Print to PDF">🖨️ Print / Save as PDF</button>
+        <button class="btn reset-only" id="resetChecklist" title="Reset all Yes/No/N/A selections">↺ Reset Checklist</button>
+      </div>
+    </header>
+
+    <!-- HEADER FIELDS -->
+    <section class="card">
+      <div class="grid">
+        <div class="field" style="grid-column: span 6;"><label>Solicitation #</label><input type="text" /></div>
+        <div class="field" style="grid-column: span 6;"><label>Contract Number</label><input type="text" /></div>
+        <div class="field" style="grid-column: span 6;"><label>Contract Estimated Amount</label><input type="text" /></div>
+        <div class="field" style="grid-column: span 6;"><label>Contract Title</label><input type="text" /></div>
+        <div class="field" style="grid-column: span 6;"><label>Contract Type</label><input type="text" /></div>
+        <div class="field" style="grid-column: span 6;"><label>Extent of Competition and SB Info (if applicable)</label><textarea placeholder="Ex. Sole Source 8(a); XXXSB set aside; Full and Open Competition"></textarea></div>
+      </div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section class="card">
+      <table>
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Document Description</th>
+            <th class="ref">References</th>
+            <th class="ynna">Yes</th>
+            <th class="ynna">No</th>
+            <th class="ynna">N/A</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- EVALUATION PHASE -->
+          <tr class="section-row"><td class="num" colspan="6">EVALUATION PHASE</td></tr>
+
+          <tr>
+            <td class="num">1</td>
+            <td class="desc">Was the POM / CRB Phase II – Prior to Negotiations (Non-Competitive Action) – Peer Review record, including Evaluation Notices (ENs) approved and uploaded to PCF?</td>
+            <td class="ref">DFARS 201.170; Local Policy;<br>AFARS 5101.170;<br>MICC Desk Book 5101.170;<br>DoD Source Selection Procedures para 3.5.4;<br>FAR &amp; MICC Desk Book 15.406-1</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">2</td>
+            <td class="desc">Has the POM / CRB Phase II – Legal review been obtained and uploaded to PCF?</td>
+            <td class="ref">AFARS 5104.803(a)(24);<br>AFARS 5101.602-2-90;<br>MICC Desk Book 202.a.1 &amp; 2</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <!-- AWARD PHASE -->
+          <tr class="section-row"><td class="num" colspan="6">AWARD PHASE</td></tr>
+
+          <tr>
+            <td class="num">1</td>
+            <td class="desc">
+              KO’s Contractor’s Responsibility Determination (≥SAT):<br>
+              Has the Determination of Responsibility Assistant (DORA) bot results been properly completed, signed and uploaded to PCF?
+            </td>
+            <td class="ref">FAR 9.104-1; FAR 9.104-6; FAR 9.105-2<br>AFARS 5109.103(b)<br>MICC Desk Book 209.1(200)</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">2</td>
+            <td class="desc">Is FAR 52.204-25 included in <strong>all contracts</strong> (inclusive in FAR 52.212-5) (Section 889a compliance)?</td>
+            <td class="ref">FAR 4.2105</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">3</td>
+            <td class="desc">
+              Has a price reasonableness determination been signed by KO?<br>
+              <em>It can be a memorandum, SAPAAM, Consolidated POM/PNM, TODD, etc.</em>
+            </td>
+            <td class="ref">FAR 4.803(a)(17); FAR 12.209;<br>FAR 13.106-3; FAR 14.408-2;<br>FAR 15.406-3(a)(11)</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">4</td>
+            <td class="desc">Has a Source Selection Decision Documentation been signed by the Source Selection Authority?</td>
+            <td class="ref">FAR 4.803(13); DoD Source Selection Guide para 3.10;<br>FAR 15.308; MICC Desk Book 15.1, 15.101-2, and 15.3</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">5</td>
+            <td class="desc">
+              Has the COR completed all required training and have all training certificates been submitted for review in PIEE JAM? KO must verify validity of COR nomination five business days prior to award.<br><strong>KOs will not award actions without a properly nominated COR.</strong>
+            </td>
+            <td class="ref">AFARS 5101.602-2-91; DFARS PGI 201.602-(d)(ii);<br>DFARS 201.603;<br>FDO-FSH Contract Oversight and Surveillance Responsibilities Memorandum, 29 October 2024</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">6</td>
+            <td class="desc">Has a Price Negotiation Memorandum (PNM) been drafted?</td>
+            <td class="ref">FAR 15.406-3</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">7</td>
+            <td class="desc">Have all required documents been prepared for submission for a Contract Review Board (CRB), Phase III, Prior to Award? (Actions &gt; $50M)</td>
+            <td class="ref">DFARS 201.170; Local Policy;<br>AFARS 5101.170;<br>MICC Desk Book 5101.170; MICC Desk Book Appendix 2</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">8</td>
+            <td class="desc">Has the SAM Exclusion record been reviewed immediately prior to award or modification? (within 24 hours)</td>
+            <td class="ref">FAR 9.405(d)(4); AFARS 5109.405(d)(4)</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">9</td>
+            <td class="desc"><strong>For modifications:</strong></td>
+            <td class="ref">FAR 43</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="num">9a</td>
+            <td class="desc">Was proper modification authority used?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="num">9b</td>
+            <td class="desc">If TO/DO, is modification authority clause in base contract?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="num">9c</td>
+            <td class="desc">Was an In Scope or Out of Scope Determination completed by the Contracting Officer and uploaded to PCF?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">10</td>
+            <td class="desc">Has a draft of the award been completed?</td>
+            <td class="ref">MICC Desk Book Appendix 2</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="num">10a</td>
+            <td class="desc">Were all applicable solicitation provisions removed?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="num">10b</td>
+            <td class="desc">If applicable, was an acceptable subcontracting plan incorporated into and made a material part of the contract?</td>
+            <td class="ref">FAR 19.705-5</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+          <tr>
+            <td class="num">10c</td>
+            <td class="desc">If wage determinations were included for solicitation, were the most current wage determination(s) incorporated for time of award?</td>
+            <td class="ref">FAR Part 22; DFARS Part 22; AFARS Part 22</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">11</td>
+            <td class="desc">Has a contract action report (CAR) been drafted?</td>
+            <td class="ref">FAR 4.604(b)(2)</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">12</td>
+            <td class="desc">Was the Procurement Data Standard (PDS) errors list reviewed, and all PDS errors cleared prior to award? If not, were sound reasons annotated for each uncleared error for improved system data.</td>
+            <td class="ref">Defense Procurement and Acquisition Policy office (DPAP) – Improve visibility &amp; accuracy of contract-related data plan. PAM.mil</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">13</td>
+            <td class="desc">Was a purchase request and commitment (PR&amp;C) provided with sufficient funding?<br><em>Best Practice: Verify with RM within 24-hours prior to award funds are still available.</em></td>
+            <td class="ref">FAR 32.703-1</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">14</td>
+            <td class="desc">Has the Announcement of Contract Awards (Congressional Notification) for actions &gt;$7.5M been factored into award milestones?<br><em>Note: Congressional Notification cannot occur until after PNM Approval.</em></td>
+            <td class="ref">FAR 5.303(a); DFARS 205.303(a)</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+
+          <tr>
+            <td class="num">15</td>
+            <td class="desc">Has EEO Clearance been obtained for actions &gt;$10M?</td>
+            <td class="ref">FAR 22.805; FAR 19.705-2(c); DFARS 222.806</td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+            <td class="ynna"><input class="check" type="checkbox"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="footnote">
+        I hereby approve this pre-award checklist and agree that all applicable items to the stated requirement have been properly implemented, signed and documented in all required official file systems and PCF.
+        Additionally, I confirm that the most current version of PAM Army Templates were used, or if an Army Template was not available, then a PAM Sample template was used.
+      </p>
+
+      <!-- SIGNATURES -->
+      <div class="sign-block">
+        <div class="sig">
+          <div class="name-input field"><label>Type Name Above the Line</label><input type="text" placeholder="Add Name" /></div>
+          <div class="line"></div>
+          <h4>Contact Specialist</h4>
+        </div>
+        <div class="sig">
+          <div class="name-input field"><label>Type Name Above the Line</label><input type="text" placeholder="Add Name" /></div>
+          <div class="line"></div>
+          <h4>Contracting Officer</h4>
+        </div>
+        <div class="sig">
+          <div class="name-input field"><label>Type Name Above the Line</label><input type="text" placeholder="Add Name" /></div>
+          <div class="line"></div>
+          <h4>One Level Above Contracting Officer (As Applicable)</h4>
+        </div>
+        <div class="sig">
+          <div class="name-input field"><label>Type Name Above the Line</label><input type="text" placeholder="Add Name" /></div>
+          <div class="line"></div>
+          <h4>Director/Division Chief (As Applicable)</h4>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const body = document.body;
+    const toggleBtn = document.getElementById('toggleTheme');
+    const printBtn = document.getElementById('printBtn');
+    const resetBtn = document.getElementById('resetChecklist');
+
+    const THEME_KEY = 'fsfsh_theme';
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) body.setAttribute('data-theme', saved);
+    toggleBtn.textContent = body.getAttribute('data-theme') === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+
+    toggleBtn.addEventListener('click', () => {
+      const current = body.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      body.setAttribute('data-theme', next);
+      localStorage.setItem(THEME_KEY, next);
+      toggleBtn.textContent = next === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+    });
+
+    printBtn.addEventListener('click', () => window.print());
+
+    resetBtn.addEventListener('click', () => {
+      document.querySelectorAll('input.check').forEach((el) => (el.checked = false));
+    });
+  </script>
+</body>
+</html>
