@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Presolicitation (Acquisition Strategy) Review Checklist – version 1 September 2025</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #11182b;
+      --text: #e8eefc;
+      --muted: #a8b3cf;
+      --border: #23314f;
+      --accent: #3b82f6;
+      --accent-2: #22c55e;
+      --table-even: #0e1530;
+      --ref: #9aa7c4;
+    }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --accent: #2563eb;
+      --accent-2: #16a34a;
+      --table-even: #f1f5f9;
+      --ref: #64748b;
+    }
+
+    html, body {
+      margin: 0; padding: 0; background: var(--bg); color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-size: 13.5px;
+    }
+
+    .container { max-width: 1200px; margin: 24px auto; padding: 0 12px 32px; }
+
+    header {
+      background: linear-gradient(180deg, var(--panel), transparent);
+      border: 1px solid var(--border); border-radius: 14px; padding: 16px;
+      position: sticky; top: 0; z-index: 50; backdrop-filter: blur(6px); margin-bottom: 14px;
+    }
+    h1 { font-size: clamp(1.05rem, 1.2rem + 0.5vw, 1.6rem); margin: 0 0 2px; }
+    .sub { color: var(--muted); margin: 0; font-size: 0.9rem; }
+
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .btn {
+      background: var(--panel); color: var(--text); border: 1px solid var(--border);
+      padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600;
+      transition: transform .05s ease, background .2s ease, border-color .2s ease; font-size: 12.5px;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--accent); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.success { background: var(--accent-2); border-color: var(--accent-2); color: #03140a; }
+    .btn.ghost { background: transparent; }
+
+    .card { background: var(--panel); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px; margin-top: 14px; }
+
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
+    .field label { color: var(--muted); font-size: 0.8rem; display: block; margin-bottom: 4px; text-align: left; }
+    .field input, .field textarea {
+      width: 80%; background: transparent; color: var(--text);
+      border: 2px solid var(--border); border-radius: 8px; padding: 6px 8px;
+      outline: none; text-align: left; font-size: 13px;
+    }
+    .field textarea { min-height: 40px; resize: vertical; }
+
+    /* Table layout tightened for 1-page fit */
+    table { width: 100%; border-collapse: separate; border-spacing: 6px; }
+    th, td { border: 1px solid var(--border); padding: 6px 8px; vertical-align: top; border-radius: 8px; }
+    th { background: var(--panel); position: sticky; top: 110px; z-index: 40; }
+    thead th { font-size: 12.5px; }
+    tbody tr:nth-child(even) td { background: var(--table-even); }
+
+    .num { width: 44px; text-align: center; font-weight: 700; white-space: nowrap; }
+    td.desc { font-size: 0.98rem; line-height: 1.3; }        /* roomier description */
+    td.ref, th.ref { color: var(--ref); font-size: .8rem; width: 220px; } /* compact refs */
+    .ynna { width: 54px; text-align: center; padding: 4px 4px; }          /* narrow Y/N/NA */
+    .ynna input[type="checkbox"] { transform: scale(0.85); }
+
+    .section-row td { font-weight: 800; background: var(--table-even); text-align: left; }
+
+    .sign-block { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 18px; }
+    .sig { border: 1px solid var(--border); border-radius: 14px; padding: 12px; background: var(--panel); }
+    .sig h4 { margin: 10px 0 4px; font-size: 0.95rem; color: var(--muted); text-align: center; }
+    .sig .name-input { margin-bottom: 6px; text-align: center; }
+    .sig .name-input input {
+      border: 2px solid var(--border); border-radius: 8px; background: transparent;
+      width: 70%; padding: 6px; text-align: center; font-size: 13px;
+    }
+    .sig .line { border-top: 2px solid var(--border); margin: 18px 0 10px; }
+
+    .footnote { color: var(--muted); font-size: .9rem; margin-top: 8px; }
+
+    /* Print optimizations: force single page as much as reasonable */
+    @media print {
+      @page { size: Letter; margin: 0.5in; }
+      body { background: #fff; color: #000; font-size: 11.5px; }
+      header, .toolbar .btn.reset-only, .toolbar .btn.toggle-only { display: none !important; }
+      .container { margin: 0; padding: 0; }
+      .card { border-radius: 0; padding: 8px; margin-top: 8px; }
+      table { border-spacing: 4px; }
+      th, td { padding: 5px 6px; }
+      .num { width: 40px; }
+      td.ref, th.ref { width: 200px; font-size: 10.5px; }
+      .ynna { width: 48px; }
+      .ynna input[type="checkbox"] { transform: scale(0.8); }
+      .sig { border-radius: 0; padding: 8px; }
+      .footnote { font-size: 10.5px; }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="container">
+    <header class="card">
+      <h1>Presolicitation (Acquisition Strategy) Review Checklist</h1>
+      <p class="sub">version 1 September 2025</p>
+      <div class="toolbar">
+        <button class="btn toggle-only" id="toggleTheme" aria-pressed="false" title="Toggle Dark/Light">🌙 Dark Mode</button>
+        <button class="btn primary" id="printBtn" title="Print to PDF">🖨️ Print / Save as PDF</button>
+        <button class="btn reset-only" id="resetChecklist" title="Reset all Yes/No/N/A selections">↺ Reset Checklist</button>
+      </div>
+    </header>
+
+    <!-- Header Fill-Up -->
+    <section class="card">
+      <div class="grid">
+        <div class="field" style="grid-column: span 6;">
+          <label>Solicitation #</label>
+          <input type="text" placeholder="Enter Solicitation Number" />
+        </div>
+        <div class="field" style="grid-column: span 6;">
+          <label>Contract Title</label>
+          <input type="text" placeholder="Enter Contract Title" />
+        </div>
+        <div class="field" style="grid-column: span 6;">
+          <label>Contract Estimated Amount</label>
+          <input type="text" placeholder="e.g., $1,250,000" />
+        </div>
+        <div class="field" style="grid-column: span 6;">
+          <label>PAN No.</label>
+          <input type="text" placeholder="Procurement Acquisition Number" />
+        </div>
+        <div class="field" style="grid-column: span 6;">
+          <label>Contract Type</label>
+          <input type="text" placeholder="e.g., FFP, T&M, IDIQ" />
+        </div>
+        <div class="field" style="grid-column: span 6;">
+          <label>Extent of Competition and SB Info (if applicable)</label>
+          <textarea placeholder="Ex. Sole Source 8(a); XXXSB set aside; Full and Open Competition" style="width:80%"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Checklist -->
+    <section class="card">
+      <table>
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Document Description</th>
+            <th class="ref">References</th>
+            <th class="ynna">Yes</th>
+            <th class="ynna">No</th>
+            <th class="ynna">N/A</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="section-row"><td class="num" colspan="6">PRE-SOLICITATION</td></tr>
+
+          <tr>
+            <td class="num">1</td>
+            <td class="desc">Was a purchase request and commitment (PR&amp;C) or PR Mod provided with sufficient funding (certified, proper amount, proper appropriation, at the proper time)?</td>
+            <td class="ref">FAR 4.803(a)(3); FAR 32.702</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r1"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r1"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r1"></td>
+          </tr>
+
+          <!-- 2: IGE -->
+          <tr>
+            <td class="num">2a</td>
+            <td class="desc">Independent Government Estimate (IGE) in PCF?</td>
+            <td class="ref">FAR 4.803(a)(7); AFARS 5107.9002</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2a"></td>
+          </tr>
+          <tr>
+            <td class="num">2b</td>
+            <td class="desc">Does the IGE contain enough detail to verify the validity of the offerors’ proposal?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2b"></td>
+          </tr>
+          <tr>
+            <td class="num">2c</td>
+            <td class="desc">Does the IGE provide sufficient narrative and analytical detail (i.e. assumptions) to support its preparation?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2c"></td>
+          </tr>
+          <tr>
+            <td class="num">2d</td>
+            <td class="desc">Contains a statement that it was prepared independently?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2d"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2d"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2d"></td>
+          </tr>
+          <tr>
+            <td class="num">2e</td>
+            <td class="desc">Was the IGE signed by the preparer and the supervisor?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2e"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2e"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r2e"></td>
+          </tr>
+
+          <!-- 3: AT/OPSEC -->
+          <tr>
+            <td class="num">3a</td>
+            <td class="desc">AT/OPSEC Cover Sheet in PCF?</td>
+            <td class="ref">AFARS 5107.9101</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r3a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r3a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r3a"></td>
+          </tr>
+          <tr>
+            <td class="num">3b</td>
+            <td class="desc">Is all selected language included in PWS?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r3b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r3b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r3b"></td>
+          </tr>
+
+          <!-- 4: DD254 -->
+          <tr>
+            <td class="num">4a</td>
+            <td class="desc">DD Form 254—Contract Security Classification Specification in PCF, if required?</td>
+            <td class="ref">AR 715-30, Para B-4.g; AR 380-49, para 4-5; DFARS PGI 04.403(1); FAR 4.403(b)(2) &amp; (c)(1); HQDA G-2 DD 254 Prep Guide (current)</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4a"></td>
+          </tr>
+          <tr>
+            <td class="num">4b</td>
+            <td class="desc">Included in the solicitation when applicable?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4b"></td>
+          </tr>
+          <tr>
+            <td class="num">4c</td>
+            <td class="desc">Does the PWS reflect DD Form 254 requirements?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r4c"></td>
+          </tr>
+
+          <!-- 5: RSCA -->
+          <tr>
+            <td class="num">5</td>
+            <td class="desc">Request for Service Contract Approval (RSCA), if applicable, signed at the proper level. Any approval deviation shall be accompanied by a letter or memo.</td>
+            <td class="ref">AR 70-13 2-2d; AFARS 5107.503(e)</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r5"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r5"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r5"></td>
+          </tr>
+
+          <!-- 6: GFP -->
+          <tr>
+            <td class="num">6a</td>
+            <td class="desc">Is Government-Furnished Property (GFP) being provided?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6a"></td>
+          </tr>
+          <tr>
+            <td class="num">6b</td>
+            <td class="desc">If yes, complete the GFP Solicitation Checklist and route to Property Administrator for review. If SCO approval is required, submit the GFP Checklist to SCO Support with the Acquisition Strategy review request.</td>
+            <td class="ref">FAR 45; FAR 45.102; FAR 52.237-2; FAR 52.245-1; FAR 52.245-9; DFARS PGI 252.103-73; FAR 45(b)(5)</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6b"></td>
+          </tr>
+          <tr>
+            <td class="num">6c</td>
+            <td class="desc">Is the Government providing incidental property? (If yes, must request Property Administrator review.)</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r6c"></td>
+          </tr>
+
+          <!-- 7: PWS/QASP/PRS/COR -->
+          <tr>
+            <td class="num">7a</td>
+            <td class="desc">Performance Work Statement</td>
+            <td class="ref">FAR 37.602</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7a"></td>
+          </tr>
+          <tr>
+            <td class="num">7b</td>
+            <td class="desc">Quality Assurance Surveillance Plan</td>
+            <td class="ref">FAR 37.60; FAR 46.4</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7b"></td>
+          </tr>
+            <tr>
+            <td class="num">7c</td>
+            <td class="desc">Performance Requirements Summary</td>
+            <td class="ref">FAR 37.603</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7c"></td>
+          </tr>
+          <tr>
+            <td class="num">7d</td>
+            <td class="desc">Was a COR identified with the package?</td>
+            <td class="ref">FAR 7.104(e)</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7d"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7d"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r7d"></td>
+          </tr>
+
+          <!-- 8: Market Research -->
+          <tr>
+            <td class="num">8</td>
+            <td class="desc">Market Research Report completed and uploaded to PCF?</td>
+            <td class="ref">AFARS 5110.002; FAR 10.001; DFARS 210.001; FAR 10.002; FAR 12.202; FAR 19.501; FAR 4.803; FAR 12.101(a)</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r8"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r8"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r8"></td>
+          </tr>
+
+          <!-- 9: DD2579 -->
+          <tr>
+            <td class="num">9</td>
+            <td class="desc">Small Business Coordination Record (DD2579) completed?</td>
+            <td class="ref">FAR 5.202; MICC DB 5119.201(200); FAR 19.502-2(a); DFARS 219.201(c)(10)(A)</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r9"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r9"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r9"></td>
+          </tr>
+          <tr>
+            <td class="num">9-Note</td>
+            <td class="desc">If action is exempted from synopsis, ensure it is properly reported on the DD2579.</td>
+            <td class="ref">See FAR 5.202</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r9n"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r9n"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r9n"></td>
+          </tr>
+
+          <!-- 10: KO determinations -->
+          <tr>
+            <td class="num">10</td>
+            <td class="desc">KO pre-award determinations completed? (e.g., type of contract, inclusion of options, commerciality, personal/non-personal services, min/max for IDIQs, Single IDIQ, severability, etc.)</td>
+            <td class="ref">FAR 12.207; DFARS 212.207; DFARS Part 216; FAR Part 16</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r10"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r10"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r10"></td>
+          </tr>
+
+          <!-- 11: Acquisition Strategy / Plan -->
+          <tr>
+            <td class="num">11</td>
+            <td class="desc">Is the Acquisition Strategy, Combined Services Acquisition Strategy/Acquisition Plan, or the Abbreviated Acquisition Strategy completed and ready for signature at the appropriate level?</td>
+            <td class="ref">AFARS 5137.590; FAR 7.105; DFARS 207.106; DFARS 207.105; AFARS 5107.103; AFARS Appx GG; SCO Delegation Memo</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r11"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r11"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r11"></td>
+          </tr>
+
+          <!-- 12: Competition limited -->
+          <tr>
+            <td class="num">12a</td>
+            <td class="desc">Is competition limited in any way—sole source actions?</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12a"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12a"></td>
+          </tr>
+          <tr>
+            <td class="num">12b</td>
+            <td class="desc">Was MICC’s centralized tracker for non-competitive actions used? (actions that exceed $250K)</td>
+            <td class="ref">MICC Desk Book 6.303(203); MICC Desk Book 13.501(200)d</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12b"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12b"></td>
+          </tr>
+          <tr>
+            <td class="num">12c</td>
+            <td class="desc">Was an RFI or Sources Sought Notice (SSN) published in SAM, and were its results used to support the justification?</td>
+            <td class="ref">MICC DB 6.303(201)a.2.; DFARS PGI 206.302-1(d); MICC DB 13.501(200)a</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12c"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12c"></td>
+          </tr>
+          <tr>
+            <td class="num">12-Note</td>
+            <td class="desc">This SSN is separate from the SSS notice of intent at FAR 5.201.</td>
+            <td class="ref"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12n"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12n"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12n"></td>
+          </tr>
+          <tr>
+            <td class="num">12d</td>
+            <td class="desc">Was the notice of intent to sole source / sources sought synopsis (SSS) published in SAM and saved in PCF?</td>
+            <td class="ref">FAR 13.105; FAR 5.201(b)(1)</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12d"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12d"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12d"></td>
+          </tr>
+          <tr>
+            <td class="num">12e</td>
+            <td class="desc">Was a J&amp;A / Justification for Exception to Fair Opportunity / Limited Sources Justification properly completed, correct format/authority, and signed at the appropriate level?</td>
+            <td class="ref">FAR 13.501; FAR 8.405-6; FAR 6.302; FAR 6.304; MICC DB 13.501(200)</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12e"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12e"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r12e"></td>
+          </tr>
+
+          <!-- 13: Consulting contracts essential -->
+          <tr>
+            <td class="num">13</td>
+            <td class="desc">For all consulting contracts deemed as essential, has the requiring activity provided a short justification to continue the service, endorsed by a GO/SES, representing the requirement is valid?</td>
+            <td class="ref">OSD Memo: Review &amp; Validation of Contracts for Consulting Services, 18 Feb 2025</td>
+            <td class="ynna"><input class="check" type="checkbox" name="r13"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r13"></td>
+            <td class="ynna"><input class="check" type="checkbox" name="r13"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="footnote">
+        I hereby approve this pre-award checklist and agree that all applicable items to the stated requirement have been properly implemented, signed and documented in all required official file systems and PCF.
+        Additionally, I confirm that the most current version of PAM Army Templates were used, or if an Army Template was not available, then a PAM Sample template was used.
+      </p>
+
+      <!-- Signatures -->
+      <div class="sign-block">
+        <div class="sig">
+          <div class="name-input field">
+            <label>Type Name Above the Line</label>
+            <input type="text" placeholder="Add Name" />
+          </div>
+          <div class="line"></div>
+          <h4>Contact Specialist</h4>
+        </div>
+        <div class="sig">
+          <div class="name-input field">
+            <label>Type Name Above the Line</label>
+            <input type="text" placeholder="Add Name" />
+          </div>
+          <div class="line"></div>
+          <h4>Contracting Officer</h4>
+        </div>
+        <div class="sig">
+          <div class="name-input field">
+            <label>Type Name Above the Line</label>
+            <input type="text" placeholder="Add Name" />
+          </div>
+          <div class="line"></div>
+          <h4>One Level Above Contracting Officer (As Applicable)</h4>
+        </div>
+        <div class="sig">
+          <div class="name-input field">
+            <label>Type Name Above the Line</label>
+            <input type="text" placeholder="Add Name" />
+          </div>
+          <div class="line"></div>
+          <h4>Director/Division Chief (As Applicable)</h4>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const body = document.body;
+    const toggleBtn = document.getElementById('toggleTheme');
+    const printBtn = document.getElementById('printBtn');
+    const resetBtn = document.getElementById('resetChecklist');
+
+    const THEME_KEY = 'fsfsh_theme';
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) body.setAttribute('data-theme', saved);
+    toggleBtn.textContent = body.getAttribute('data-theme') === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+
+    toggleBtn.addEventListener('click', () => {
+      const current = body.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      body.setAttribute('data-theme', next);
+      localStorage.setItem(THEME_KEY, next);
+      toggleBtn.textContent = next === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+    });
+
+    printBtn.addEventListener('click', () => window.print());
+
+    resetBtn.addEventListener('click', () => {
+      document.querySelectorAll('input.check').forEach((el) => (el.checked = false));
+    });
+  </script>
+</body>
+</html>
