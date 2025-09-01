@@ -75,9 +75,9 @@
     tbody tr:nth-child(even) td { background: var(--table-even); }
 
     .num { width: 44px; text-align: center; font-weight: 700; white-space: nowrap; }
-    td.desc { font-size: 0.98rem; line-height: 1.3; }        /* roomier description */
-    td.ref, th.ref { color: var(--ref); font-size: .8rem; width: 220px; } /* compact refs */
-    .ynna { width: 54px; text-align: center; padding: 4px 4px; }          /* narrow Y/N/NA */
+    td.desc { font-size: 0.98rem; line-height: 1.3; }
+    td.ref, th.ref { color: var(--ref); font-size: .8rem; width: 220px; }
+    .ynna { width: 54px; text-align: center; padding: 4px 4px; }
     .ynna input[type="checkbox"] { transform: scale(0.85); }
 
     .section-row td { font-weight: 800; background: var(--table-even); text-align: left; }
@@ -94,11 +94,17 @@
 
     .footnote { color: var(--muted); font-size: .9rem; margin-top: 8px; }
 
-    /* Print optimizations: force single page as much as reasonable */
+    /* Print optimizations: keep header, hide toolbar */
     @media print {
       @page { size: Letter; margin: 0.5in; }
       body { background: #fff; color: #000; font-size: 11.5px; }
-      header, .toolbar .btn.reset-only, .toolbar .btn.toggle-only { display: none !important; }
+
+      /* ✅ Keep the header (title/subtitle) visible */
+      header { position: static; }
+
+      /* ❌ Hide the toolbar only (so buttons don't print) */
+      .toolbar { display: none !important; }
+
       .container { margin: 0; padding: 0; }
       .card { border-radius: 0; padding: 8px; margin-top: 8px; }
       table { border-spacing: 4px; }
@@ -115,7 +121,7 @@
 <body data-theme="light">
   <div class="container">
     <header class="card">
-      <h1>Presolicitation (Acquisition Strategy) Review Checklist</h1>
+      <h1>Pre-Solicitation (Acquisition Strategy) Review Checklist</h1>
       <p class="sub">version 1 September 2025</p>
       <div class="toolbar">
         <button class="btn toggle-only" id="toggleTheme" aria-pressed="false" title="Toggle Dark/Light">🌙 Dark Mode</button>
@@ -318,7 +324,7 @@
             <td class="ynna"><input class="check" type="checkbox" name="r7b"></td>
             <td class="ynna"><input class="check" type="checkbox" name="r7b"></td>
           </tr>
-            <tr>
+          <tr>
             <td class="num">7c</td>
             <td class="desc">Performance Requirements Summary</td>
             <td class="ref">FAR 37.603</td>
