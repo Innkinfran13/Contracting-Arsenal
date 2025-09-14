@@ -1,129 +1,245 @@
-<!DOCTYPE html> 
-<html lang="en"> 
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contracting Arsenal</title>
+
+  <!-- Optional: modern, readable fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+
+  <!-- Social share polish -->
+  <meta name="description" content="Contracting Arsenal—tools, checklists, and prompts for acquisition pros." />
+  <meta property="og:title" content="Contracting Arsenal" />
+  <meta property="og:description" content="Tools, checklists, and prompts for acquisition pros." />
+  <meta name="theme-color" content="#3B5323" />
+
+  <!-- (Keeps your external CSS if you want to split styles later) -->
   <link rel="stylesheet" href="style.css" />
 
   <style>
-    /* ---- Layout & Typography helpers ---- */
-    h2 { text-align: center; }
-    .subtext { color:#6b7280; margin: 6px 0 16px; text-align:center; }
-    .emoji { font-size:1.2em; vertical-align:middle; margin-right:6px; }
+    /* ==== Base / Reset ==== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin:0; padding:0; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #f7f7f4;
+      color:#1f2937;
+      line-height:1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ==== Theme tokens (Army Green) ==== */
+    :root{
+      --brand:#3B5323;            /* Army Green */
+      --brand-600:#2e421c;        /* Darker */
+      --brand-50:#e9f3e9;         /* Pale green bg */
+      --sand:#E9E4D6;             /* Warm sand bg */
+      --accent:#C56A28;           /* Burnt orange accents */
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --ring:#e5e7eb;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+      --radius: 12px;
+      --radius-sm: 10px;
+      --radius-lg: 16px;
+      --speed: 180ms;
+      --ease: cubic-bezier(.2,.7,.2,1);
+    }
+
+    /* ==== Helpers ==== */
+    .container { width:min(1100px, 94vw); margin:0 auto; }
+    h1,h2,h3 { color:var(--ink); margin:0 0 8px; }
+    h2 { text-align:center; font-weight:800; letter-spacing:.2px; }
+    .subtext { color:var(--muted); margin:6px 0 18px; text-align:center; }
+    .emoji { font-size:1.1em; vertical-align:middle; margin-right:6px; }
     .actions { display:flex; gap:10px; flex-wrap:wrap; }
 
-    /* Unified button/header/footer styling — Army Green theme */
-    :root { --brand-blue:#3B5323; --brand-blue-dark:#2e421c; }
-
-    .btn {
-      display:inline-block; padding:10px 14px; border-radius:10px;
-      border:1px solid var(--brand-blue); background:var(--brand-blue); color:#fff !important;
+    /* ==== Buttons ==== */
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:var(--radius-sm);
+      border:1px solid var(--brand); background:var(--brand); color:#fff !important;
       cursor:pointer; text-decoration:none; font-weight:600;
-      transition: background .15s ease, border-color .15s ease, transform .05s ease;
+      transition: background var(--speed) var(--ease), border-color var(--speed) var(--ease), transform 80ms ease-out, box-shadow var(--speed) var(--ease);
+      -webkit-tap-highlight-color: transparent;
     }
-    .btn:hover { background:var(--brand-blue-dark); border-color:var(--brand-blue-dark); }
-    .btn:active { transform: translateY(1px); }
-    .btn.copy, .btn.visit { background:var(--brand-blue); border-color:var(--brand-blue); color:#fff !important; }
+    .btn:hover{ background:var(--brand-600); border-color:var(--brand-600); box-shadow: 0 4px 14px rgba(59,83,35,.25); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.copy, .btn.visit { background:var(--brand); border-color:var(--brand); color:#fff !important; }
 
-    .pf-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .tag { display:inline-block; padding:3px 8px; border-radius:999px; background:#e9f3e9; color:#1f2937; font-size:.85rem; margin-bottom:8px; }
-    form.pf { display:grid; gap:10px; max-width:720px; margin:auto; }
-    form.pf input, form.pf textarea { width:100%; padding:10px; border-radius:10px; border:1px solid #d1d5db; }
-    form.pf .row { display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
-    @media (max-width: 640px){ form.pf .row { grid-template-columns: 1fr; } }
-
-    /* ---- Sticky Header with Hamburger (left) — Army Green ---- */
-    header.site-header {
-      position: sticky; top: 0; z-index: 50;
-      background: var(--brand-blue); color: #fff; border-bottom: 1px solid var(--brand-blue-dark);
+    /* Secondary (ghost) button style if needed */
+    .btn.ghost{
+      background:transparent; color:var(--brand) !important; border-color:var(--brand);
     }
-    .site-header .bar {
+    .btn.ghost:hover{ background:var(--brand-50); }
+
+    /* ==== Header / Nav (hamburger always collapsed until click) ==== */
+    header.site-header{
+      position: sticky; top:0; z-index:50;
+      background: var(--brand);
+      color:#fff; border-bottom:1px solid var(--brand-600);
+      transition: box-shadow var(--speed) var(--ease), transform var(--speed) var(--ease), padding var(--speed) var(--ease), background var(--speed) var(--ease);
+    }
+    .site-header .bar{
       display:flex; align-items:center; justify-content:space-between;
-      max-width: 1100px; margin: 0 auto; padding: 10px 12px;
+      max-width:1100px; margin:0 auto; padding: 10px 12px;
     }
-    .brand {
-      flex: 1 1 auto; text-align:center;
-      font-size: clamp(28px, 5vw, 52px);
-      font-weight: 900; margin: 6px auto 6px; color:#fff;
+    .brand{
+      flex:1 1 auto; text-align:center; color:#fff;
+      font-family:"Montserrat", system-ui, sans-serif;
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight:800; margin: 4px auto;
+      letter-spacing:.3px;
     }
-    /* Left hamburger; right spacer keeps title centered */
-    .left-slot, .right-slot { width:42px; display:flex; align-items:center; justify-content:center; }
+    .left-slot, .right-slot{ width:48px; display:flex; align-items:center; justify-content:center; }
 
-    /* Hamburger button */
-    .hamburger {
+    .hamburger{
       width:42px; height:42px; border-radius:10px;
       border:1px solid #ffffff88; background:transparent; color:#fff; cursor:pointer;
       align-items:center; justify-content:center; display:flex;
+      transition: transform var(--speed) var(--ease);
     }
-    .hamburger .lines { position:relative; width:20px; height:2px; background:#fff; transition:transform .2s ease; }
+    .hamburger:focus-visible{ outline:3px solid #fff; outline-offset:2px; border-color:#fff; }
+    .hamburger:active{ transform: scale(.98); }
+    .hamburger .lines{ position:relative; width:20px; height:2px; background:#fff; transition:transform var(--speed) var(--ease); }
     .hamburger .lines::before,
-    .hamburger .lines::after {
-      content:""; position:absolute; left:0; width:20px; height:2px; background:#fff; transition: transform .2s ease, top .2s ease, opacity .2s ease;
+    .hamburger .lines::after{
+      content:""; position:absolute; left:0; width:20px; height:2px; background:#fff; transition: transform var(--speed) var(--ease), top var(--speed) var(--ease), opacity var(--speed) var(--ease);
     }
-    .hamburger .lines::before { top:-6px; }
-    .hamburger .lines::after  { top: 6px; }
-    .hamburger[aria-expanded="true"] .lines { background: transparent; }
-    .hamburger[aria-expanded="true"] .lines::before { top:0; transform: rotate(45deg); }
-    .hamburger[aria-expanded="true"] .lines::after  { top:0; transform: rotate(-45deg); }
+    .hamburger .lines::before{ top:-6px; }
+    .hamburger .lines::after { top: 6px; }
+    .hamburger[aria-expanded="true"] .lines{ background: transparent; }
+    .hamburger[aria-expanded="true"] .lines::before{ top:0; transform: rotate(45deg); }
+    .hamburger[aria-expanded="true"] .lines::after { top:0; transform: rotate(-45deg); }
 
-    /* Nav links */
-    nav.quick { text-align:center; }
-    .nav-links { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; padding: 8px 0 14px; }
-    .nav-links a { text-decoration:none; color:#fff; }
-    .nav-links a:hover { text-decoration: underline; text-underline-offset: 3px; }
-
-    /* Mobile collapse */
-    @media (max-width: 860px){
-      .nav-wrap { overflow:hidden; max-height:0; transition:max-height .25s ease; }
-      .nav-wrap.open { max-height: 320px; }
-      .nav-links { flex-direction:column; align-items:center; gap:10px; padding: 8px 0 12px; }
+    /* Collapsible nav: hidden by default on ALL viewports; opens on click */
+    .nav-wrap{
+      overflow:hidden; max-height:0; transition:max-height var(--speed) var(--ease);
+      will-change: max-height;
     }
+    .nav-wrap.open { max-height: 420px; } /* enough to show rows/columns */
 
-    /* Subtle shadow on scroll */
-    .scrolled { box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+    nav.quick{ text-align:center; }
+    .nav-links{
+      display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
+      padding: 8px 0 14px;
+    }
+    .nav-links a{ text-decoration:none; color:#fff; font-weight:600; }
+    .nav-links a:hover{ text-decoration: underline; text-underline-offset: 3px; }
 
-    /* Container width */
-    .container { width:min(1100px, 94vw); margin: 0 auto; }
+    /* Scroll shadow */
+    .scrolled{ box-shadow: 0 10px 30px rgba(0,0,0,.22); }
 
-    /* Footer styling to match header */
-    footer { background: var(--brand-blue); color:#fff; margin-top: 30px; }
-    footer .container { padding: 18px 0; }
-    .disclaimer { background:#f9fafb; border-top:1px solid #e5e7eb; padding:16px 0; margin-top:24px; }
-    .disclaimer .container { color:#374151; font-size:.95rem; }
+    /* ==== Hero / intro strip (optional texture) ==== */
+    .hero{
+      background: linear-gradient(0deg, rgba(59,83,35,.06), rgba(59,83,35,.06)), var(--sand);
+      border-bottom:1px solid var(--ring);
+      padding: 18px 0;
+    }
+    .hero .tagline{ text-align:center; color:#374151; margin:6px 0 0; }
+
+    /* ==== Knowledge Stockpile ==== */
+    .toolbar{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center;
+      margin: 16px 0 8px;
+    }
+    .search{
+      display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--ring); border-radius:999px; padding:6px 12px; min-width:280px; max-width:520px; width:100%;
+      box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+    .search input{
+      flex:1; border:0; outline:0; background:transparent; font-size:15px; color:var(--ink);
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px;
+      background:#fff; border:1px solid var(--brand); color:var(--brand); font-weight:600; cursor:pointer;
+      transition: background var(--speed) var(--ease), color var(--speed) var(--ease), border-color var(--speed) var(--ease), transform 80ms ease-out, box-shadow var(--speed) var(--ease);
+      user-select:none;
+    }
+    .chip:hover{ background:var(--brand-50); }
+    .chip[aria-pressed="true"]{ background:var(--brand); color:#fff; }
+
+    .cards{
+      display:grid; gap:20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      margin-top: 16px;
+    }
+    .card{
+      background: var(--card); border-radius: var(--radius); border:1px solid var(--ring);
+      box-shadow: var(--shadow); padding: 18px; transition: transform var(--speed) var(--ease), box-shadow var(--speed) var(--ease), border-color var(--speed) var(--ease);
+    }
+    .card:hover{ transform: translateY(-3px); box-shadow: 0 14px 34px rgba(0,0,0,.12); }
+    .card h3{ margin-bottom: 8px; }
+    .card p.snippet{ margin: 0 0 12px; color:#4b5563; }
+    .tag{ display:inline-block; padding:3px 8px; border-radius:999px; background:var(--brand-50); color:#111827; font-size:.85rem; margin-bottom:8px; border:1px solid #d8e6d8; }
+
+    /* ==== Forms (PromptForge / WSH) ==== */
+    form.pf{ display:grid; gap:10px; max-width:720px; margin:auto; }
+    form.pf input, form.pf textarea{
+      width:100%; padding:10px; border-radius:var(--radius-sm); border:1px solid #d1d5db; background:#fff;
+    }
+    form.pf .row{ display:grid; gap:10px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 640px){ form.pf .row{ grid-template-columns: 1fr; } }
+
+    /* ==== Disclaimer strip ==== */
+    .disclaimer{
+      background:#f9fafb; border-top:1px solid #e5e7eb; padding:16px 0; margin-top:24px;
+    }
+    .disclaimer .container{ color:#374151; font-size:.95rem; }
+
+    /* ==== Footer ==== */
+    footer{ background: var(--brand); color:#fff; margin-top: 30px; }
+    footer .container{ padding: 18px 0; text-align:center; }
+
+    /* ==== Back-to-top button ==== */
+    .to-top{
+      position: fixed; right:18px; bottom:18px; z-index:40;
+      opacity:0; visibility:hidden; transform: translateY(8px);
+      transition: opacity var(--speed) var(--ease), transform var(--speed) var(--ease), visibility 0s linear var(--speed);
+    }
+    .to-top.show{ opacity:1; visibility:visible; transform: translateY(0); transition-delay: 0s; }
+    .to-top .btn{ padding:10px 12px; border-radius:999px; }
+
+    /* ==== Reduced motion respect ==== */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    }
   </style>
 </head>
 <body>
-  <!-- ===== Header with Hamburger (left) ===== -->
+  <!-- ===== Header ===== -->
   <header class="site-header" id="site-header">
     <div class="bar container">
-      <!-- Left: Hamburger -->
       <div class="left-slot">
         <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-navigation">
           <span class="lines"></span>
         </button>
       </div>
-
-      <!-- Center: Title -->
       <div class="brand">Contracting Arsenal</div>
-
-      <!-- Right: spacer to balance -->
       <div class="right-slot"></div>
     </div>
 
-    <!-- Collapsible nav -->
+    <!-- Collapsible nav (always collapsed until click) -->
     <div class="nav-wrap" id="nav-wrap">
       <nav class="quick container" id="primary-navigation">
-        <div class="nav-links">
-          <a href="#knowledge-stockpile"><span class="emoji">📚</span>Knowledge Stockpile</a>
-          <a href="#promptforge"><span class="emoji">🔥</span>PromptForge</a>
-          <a href="#work-smarter-hub"><span class="emoji">🧠</span>Work Smarter Hub</a>
-          <a href="#ai-battleground"><span class="emoji">🤖</span>AI Battleground</a>
-          <a href="#contact"><span class="emoji">📬</span>Contact Us</a>
+        <div class="nav-links" role="menubar">
+          <a role="menuitem" href="#knowledge-stockpile"><span class="emoji">📚</span>Knowledge Stockpile</a>
+          <a role="menuitem" href="#promptforge"><span class="emoji">🔥</span>PromptForge</a>
+          <a role="menuitem" href="#work-smarter-hub"><span class="emoji">🧠</span>Work Smarter Hub</a>
+          <a role="menuitem" href="#ai-battleground"><span class="emoji">🤖</span>AI Battleground</a>
+          <a role="menuitem" href="#contact"><span class="emoji">📬</span>Contact Us</a>
         </div>
       </nav>
     </div>
   </header>
+
+  <!-- Optional hero -->
+  <section class="hero">
+    <div class="container">
+      <p class="tagline">Tools, templates, and AI prompts for acquisition pros — verify against FAR/DFARS and local policy.</p>
+    </div>
+  </section>
 
   <main class="container">
     <!-- ===================== Knowledge Stockpile ===================== -->
@@ -131,93 +247,109 @@
       <h2>📚 Knowledge Stockpile 📚</h2>
       <p class="subtext">Collection of contracting tools, templates, study materials, and resources available to everyone.</p>
 
-      <div class="cards">
+      <!-- Toolbar: search + chips -->
+      <div class="toolbar" aria-label="Filter tools">
+        <div class="search" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M21 21l-3.5-3.5M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input id="search" type="search" placeholder="Search tools, tags…" aria-label="Search Knowledge Stockpile">
+        </div>
+        <button class="chip" data-tag="productivity" aria-pressed="false">Productivity</button>
+        <button class="chip" data-tag="contracting" aria-pressed="false">Contracting</button>
+        <button class="chip" data-tag="learning" aria-pressed="false">Learning</button>
+        <button class="chip" data-tag="checklist" aria-pressed="false">Checklists</button>
+        <button class="chip" data-tag="quiz" aria-pressed="false">Quizzes</button>
+      </div>
+
+      <div class="cards" id="cards">
         <!-- Professional Certification Quiz -->
-        <article class="card">
+        <article class="card" data-tags="quiz study contracting">
           <h3>Professional Contracting Certification Quiz</h3>
-          <p>A browser-based quiz to practice and review contracting knowledge.</p>
+          <p class="snippet">A browser-based quiz to practice and review contracting knowledge.</p>
           <div class="actions">
             <a class="btn" href="Professional%20Cert%20Contracting%20Quiz%20final.html" target="_blank" rel="noopener">Open</a>
             <a class="btn" href="Professional%20Cert%20Contracting%20Quiz%20final.html" download>Download</a>
           </div>
         </article>
+
         <!-- FAR Parts Quiz -->
-        <article class="card">
+        <article class="card" data-tags="quiz learning contracting">
           <h3>FAR Parts Quiz</h3>
-          <p>Interactive quiz covering FAR Parts 1–52. Great for practice.</p>
+          <p class="snippet">Interactive quiz covering FAR Parts 1–52. Great for practice.</p>
           <div class="actions">
             <a class="btn" href="FAR%20parts%20quiz.html" target="_blank" rel="noopener">Open</a>
             <a class="btn" href="FAR%20parts%20quiz.html" download>Download</a>
           </div>
         </article>
+
         <!-- Supply Under SAT KO Checklist -->
-        <article class="card">
+        <article class="card" data-tags="checklist contracting">
           <h3>Supply Under SAT KO Checklist</h3>
-          <p>Quick checklist for supply actions under the Simplified Acquisition Threshold.</p>
+          <p class="snippet">Quick checklist for supply actions under the Simplified Acquisition Threshold.</p>
           <div class="actions">
             <a class="btn" href="supply-under-sat-ko-checklist.html" target="_blank" rel="noopener">Open</a>
             <a class="btn" href="supply-under-sat-ko-checklist.html" download>Download</a>
           </div>
         </article>
+
         <!-- CORB Level 1 – Team Reviewer -->
-        <article class="card">
+        <article class="card" data-tags="learning game team">
           <h3>CORB Level 1 – Team Reviewer</h3>
-          <p>Spin-the-wheel group game for interactive learning and collaboration.</p>
+          <p class="snippet">Spin-the-wheel group game for interactive learning and collaboration.</p>
           <div class="actions">
             <a class="btn" href="corb-level-1-team-reviewer.html" target="_blank" rel="noopener">Open</a>
             <a class="btn" href="corb-level-1-team-reviewer.html" download>Download</a>
           </div>
         </article>
+
         <!-- Pre-Solicitation Review Checklist -->
-<article class="card">
-  <h3>Pre-Solicitation Review Checklist</h3>
-  <p>Checklist to verify market research, requirements clarity, and acquisition planning before solicitation.</p>
-  <div class="actions">
-    <a class="btn" href="pre-solicitation-review-checklist.html" target="_blank" rel="noopener">Open</a>
-    <a class="btn" href="pre-solicitation-review-checklist.html" download>Download</a>
-  </div>
-</article>
+        <article class="card" data-tags="checklist contracting">
+          <h3>Pre-Solicitation Review Checklist</h3>
+          <p class="snippet">Verify market research, requirements clarity, and acquisition planning before solicitation.</p>
+          <div class="actions">
+            <a class="btn" href="pre-solicitation-review-checklist.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn" href="pre-solicitation-review-checklist.html" download>Download</a>
+          </div>
+        </article>
 
-<!-- Solicitation Review Checklist -->
-<article class="card">
-  <h3>Solicitation Review Checklist</h3>
-  <p>Quick review of sections, clauses, dates, and attachments prior to release.</p>
-  <div class="actions">
-    <a class="btn" href="solicitation-review-checklist.html" target="_blank" rel="noopener">Open</a>
-    <a class="btn" href="solicitation-review-checklist.html" download>Download</a>
-  </div>
-</article>
+        <!-- Solicitation Review Checklist -->
+        <article class="card" data-tags="checklist contracting">
+          <h3>Solicitation Review Checklist</h3>
+          <p class="snippet">Review sections, clauses, dates, and attachments prior to release.</p>
+          <div class="actions">
+            <a class="btn" href="solicitation-review-checklist.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn" href="solicitation-review-checklist.html" download>Download</a>
+          </div>
+        </article>
 
-<!-- Evaluation Review Checklist -->
-<article class="card">
-  <h3>Evaluation Review Checklist</h3>
-  <p>Guide for evaluating proposals: factors, documentation, and consensus notes.</p>
-  <div class="actions">
-    <a class="btn" href="evaluation-review-checklist.html" target="_blank" rel="noopener">Open</a>
-    <a class="btn" href="evaluation-review-checklist.html" download>Download</a>
-  </div>
-</article>
+        <!-- Evaluation Review Checklist -->
+        <article class="card" data-tags="checklist contracting">
+          <h3>Evaluation Review Checklist</h3>
+          <p class="snippet">Evaluate proposals: factors, documentation, and consensus notes.</p>
+          <div class="actions">
+            <a class="btn" href="evaluation-review-checklist.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn" href="evaluation-review-checklist.html" download>Download</a>
+          </div>
+        </article>
 
-<!-- Post-Award Review Checklist -->
-<article class="card">
-  <h3>Post-Award Review Checklist</h3>
-  <p>Post-award actions: kick-off, deliverables, COR designation, and files.</p>
-  <div class="actions">
-    <a class="btn" href="post-award-review-checklist.html" target="_blank" rel="noopener">Open</a>
-    <a class="btn" href="post-award-review-checklist.html" download>Download</a>
-  </div>
-</article>
+        <!-- Post-Award Review Checklist -->
+        <article class="card" data-tags="checklist contracting">
+          <h3>Post-Award Review Checklist</h3>
+          <p class="snippet">Post-award actions: kick-off, deliverables, COR designation, and files.</p>
+          <div class="actions">
+            <a class="btn" href="post-award-review-checklist.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn" href="post-award-review-checklist.html" download>Download</a>
+          </div>
+        </article>
 
-<!-- Award Review Checklist -->
-<article class="card">
-  <h3>Award Review Checklist</h3>
-  <p>Final checks before award: pricing, approvals, signatures, and notifications.</p>
-  <div class="actions">
-    <a class="btn" href="award-review-checklist.html" target="_blank" rel="noopener">Open</a>
-    <a class="btn" href="award-review-checklist.html" download>Download</a>
-  </div>
-</article>
-
+        <!-- Award Review Checklist -->
+        <article class="card" data-tags="checklist contracting">
+          <h3>Award Review Checklist</h3>
+          <p class="snippet">Final checks before award: pricing, approvals, signatures, and notifications.</p>
+          <div class="actions">
+            <a class="btn" href="award-review-checklist.html" target="_blank" rel="noopener">Open</a>
+            <a class="btn" href="award-review-checklist.html" download>Download</a>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -385,103 +517,93 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
       <p class="subtext">Battle-test AI tools for contracting: document analysis, clause checks, research, and automation.</p>
 
       <div class="pf-grid">
-        <!-- 1. AcqBot -->
         <article class="card">
           <span class="tag">Acquisition Assistant</span>
           <h3>AcqBot</h3>
           <p class="snippet">AI assistant for acquisition professionals: market research, document drafting, FAR/DFARS checks.</p>
           <div class="actions">
-            <a class="btn" href="https://acqbot.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://acqbot.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 2. Advana -->
         <article class="card">
           <span class="tag">DoD Data Platform</span>
           <h3>Advana</h3>
           <p class="snippet">DoD’s enterprise data platform for analytics and dashboards across missions and acquisition.</p>
           <div class="actions">
-            <a class="btn" href="https://advana.data.mil/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://advana.data.mil/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 3. AskSage -->
         <article class="card">
           <span class="tag">DoD Chatbot</span>
           <h3>AskSage</h3>
           <p class="snippet">Secure DoD chatbot answering policy and contracting questions from trusted sources.</p>
           <div class="actions">
-            <a class="btn" href="https://chat.asksage.mil/login" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://chat.asksage.mil/login" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 4. AuthorAI -->
         <article class="card">
           <span class="tag">Document Drafting</span>
           <h3>Authorium – AuthorAI</h3>
           <p class="snippet">Drafts and reviews acquisition documents while encouraging FAR/DFARS compliance.</p>
           <div class="actions">
-            <a class="btn" href="https://authorium.com/solution-authorai/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://authorium.com/solution-authorai/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 5. ProcureSight -->
         <article class="card">
           <span class="tag">Market Intelligence</span>
           <h3>ProcureSight</h3>
           <p class="snippet">Vendor insights, price benchmarks, and sourcing recommendations for procurement teams.</p>
           <div class="actions">
-            <a class="btn" href="https://procuresight.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://procuresight.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 6. Pryon (CDAO) -->
         <article class="card">
           <span class="tag">Knowledge AI</span>
           <h3>Pryon (CDAO)</h3>
           <p class="snippet">Turns unstructured docs into searchable knowledge for rapid Q&A and discovery.</p>
           <div class="actions">
-            <a class="btn" href="https://cdao.pryon.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://cdao.pryon.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 7. FSC/PSC -->
         <article class="card">
           <span class="tag">Supply Chain</span>
           <h3>FSC/PSC</h3>
           <p class="snippet">Resources and tools focused on federal supply chain and procurement solutions.</p>
           <div class="actions">
-            <a class="btn" href="https://www.fscpsc.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://www.fscpsc.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 8. Tradewind AI (PDF) -->
         <article class="card">
           <span class="tag">DoD AI Marketplace</span>
           <h3>Tradewind AI (Whitepaper)</h3>
           <p class="snippet">DoD marketplace for AI/ML solutions—vendors, use cases, and references.</p>
           <div class="actions">
-            <a class="btn" href="https://www.tradewindai.com/_files/ugd/2df116_23957d26c1cc4a97b784795364d62a89.pdf" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://www.tradewindai.com/_files/ugd/2df116_23957d26c1cc4a97b784795364d62a89.pdf" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 9. RAI (AcqBot) -->
         <article class="card">
           <span class="tag">Responsible AI</span>
           <h3>RAI – Responsible AI (AcqBot)</h3>
           <p class="snippet">Responsible AI tooling tailored for acquisition: transparency, fairness, and compliance.</p>
           <div class="actions">
-            <a class="btn" href="https://rai.acqbot.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://rai.acqbot.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
 
-        <!-- 10. TurboInnovate (CDAO) -->
         <article class="card">
           <span class="tag">Innovation Challenges</span>
           <h3>TurboInnovate (CDAO)</h3>
           <p class="snippet">Platform for crowdsourcing and rapid prototyping of acquisition solutions with AI.</p>
           <div class="actions">
-            <a class="btn" href="https://cdao.turboinnovate.com/" target="_blank" rel="noopener">Visit</a>
+            <a class="btn visit" href="https://cdao.turboinnovate.com/" target="_blank" rel="noopener">Visit</a>
           </div>
         </article>
       </div>
@@ -511,19 +633,28 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
   </main>
 
   <footer>
-    <div class="container" style="text-align:center;">© <span id="year"></span> Contracting Arsenal</div>
+    <div class="container">© <span id="year"></span> Contracting Arsenal</div>
   </footer>
+
+  <a href="#top" class="to-top" id="toTop" aria-label="Back to top">
+    <span class="btn">↑ Top</span>
+  </a>
 
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Sticky header shadow on scroll
+    // Sticky header shadow on scroll + Back-to-top button
     const header = document.getElementById('site-header');
-    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 4);
+    const toTop = document.getElementById('toTop');
+    const onScroll = () => {
+      const scrolled = window.scrollY > 8;
+      header.classList.toggle('scrolled', scrolled);
+      toTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.8);
+    };
     document.addEventListener('scroll', onScroll, { passive: true });
 
-    // Hamburger toggle
+    // Hamburger toggle (works on all viewports)
     const hamburger = document.getElementById('hamburger');
     const navWrap = document.getElementById('nav-wrap');
     function closeMenu() {
@@ -542,7 +673,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeMenu();
     });
-    // Close menu after clicking a nav link (mobile)
+    // Close menu after clicking a nav link
     document.querySelectorAll('#primary-navigation a').forEach(a => {
       a.addEventListener('click', () => closeMenu());
     });
@@ -551,24 +682,22 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
     document.querySelectorAll('.btn.copy').forEach(btn => {
       btn.addEventListener('click', () => {
         const text = btn.getAttribute('data-copy') || '';
-        navigator.clipboard.writeText(text).then(() => {
+        // Try modern API
+        navigator.clipboard?.writeText(text).then(onCopied).catch(fallbackCopy);
+        function onCopied(){
           const original = btn.textContent;
           btn.textContent = 'Copied!';
           setTimeout(() => {
-            // Work Smarter Hub copies -> reset label to "Copy"
             if (btn.classList.contains('copy-wsh')) {
               btn.textContent = 'Copy';
             } else {
               btn.textContent = 'Copy Prompt';
             }
           }, 1200);
-        }).catch(() => {
-          // Fallback for older browsers
-          const txt = btn.getAttribute('data-copy') || '';
+        }
+        function fallbackCopy(){
           const ta = document.createElement('textarea');
-          ta.value = txt;
-          document.body.appendChild(ta);
-          ta.select();
+          ta.value = text; document.body.appendChild(ta); ta.select();
           try { document.execCommand('copy'); } catch(e){}
           document.body.removeChild(ta);
           const original = btn.textContent;
@@ -580,11 +709,11 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
               btn.textContent = 'Copy Prompt';
             }
           }, 1200);
-        });
+        }
       });
     });
 
-    // Submit via email (PromptForge)
+    // PromptForge email submit
     const pfForm = document.getElementById('pf-form');
     const pfClear = document.getElementById('pf-clear');
     if (pfForm) {
@@ -594,12 +723,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
         const title = document.getElementById('pf-title').value.trim();
         const prompt = document.getElementById('pf-text').value.trim();
         const cat = document.getElementById('pf-category').value.trim();
-
-        if(!title || !prompt){
-          alert('Please fill in the Prompt Title and the Prompt text.');
-          return;
-        }
-
+        if(!title || !prompt){ alert('Please fill in the Prompt Title and the Prompt text.'); return; }
         const subject = encodeURIComponent('PromptForge submission: ' + title);
         const bodyLines = [
           'Title: ' + title,
@@ -610,13 +734,12 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
           prompt
         ];
         const body = encodeURIComponent(bodyLines.join('\n'));
-        const mailto = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
-        window.location.href = mailto;
+        window.location.href = 'mailto:innkinfran@outlook.com?subject=' + subject + '&body=' + body;
       });
       pfClear?.addEventListener('click', () => pfForm.reset());
     }
 
-    // Submit via email (Work Smarter Hub)
+    // Work Smarter Hub email submit
     const wshForm = document.getElementById('wsh-form');
     const wshClear = document.getElementById('wsh-clear');
     if (wshForm) {
@@ -626,12 +749,7 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
         const cat = document.getElementById('wsh-category').value.trim();
         const text = document.getElementById('wsh-text').value.trim();
         const name = document.getElementById('wsh-name')?.value.trim() || '';
-
-        if(!title || !text){
-          alert('Please fill in the Idea Title and description.');
-          return;
-        }
-
+        if(!title || !text){ alert('Please fill in the Idea Title and description.'); return; }
         const subject = encodeURIComponent('Work Smarter Hub submission: ' + title);
         const body = encodeURIComponent([
           'Title: ' + title,
@@ -645,6 +763,43 @@ Please also give me 5 multiple-choice questions at the end as a mini quiz.">Copy
       });
       wshClear?.addEventListener('click', () => wshForm.reset());
     }
+
+    // ===== Knowledge Stockpile Search + Tag Filters =====
+    const search = document.getElementById('search');
+    const cards = Array.from(document.querySelectorAll('#cards .card'));
+    const chips = Array.from(document.querySelectorAll('.chip'));
+    let activeTags = new Set();
+
+    function applyFilters(){
+      const q = (search.value || '').toLowerCase().trim();
+      cards.forEach(card => {
+        const hay = (card.textContent || '').toLowerCase();
+        const tags = (card.dataset.tags || '').toLowerCase().split(/\s+/);
+        const matchesText = !q || hay.includes(q);
+        const matchesTags = activeTags.size === 0 || [...activeTags].every(t => tags.includes(t));
+        card.style.display = (matchesText && matchesTags) ? '' : 'none';
+      });
+    }
+
+    search?.addEventListener('input', applyFilters);
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const t = chip.dataset.tag?.toLowerCase();
+        const pressed = chip.getAttribute('aria-pressed') === 'true';
+        if (pressed) {
+          chip.setAttribute('aria-pressed', 'false');
+          activeTags.delete(t);
+        } else {
+          chip.setAttribute('aria-pressed', 'true');
+          activeTags.add(t);
+        }
+        applyFilters();
+      });
+    });
+
+    // Initial filter (none)
+    applyFilters();
   </script>
 </body>
 </html>
